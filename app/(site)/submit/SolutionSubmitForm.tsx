@@ -2,6 +2,7 @@
 
 import { useActionState } from 'react';
 import { FormMessage, SubmitButton } from '@/components/admin/FormBits';
+import { CodeEditor } from '@/components/code/CodeEditor';
 import { Card } from '@/components/ui/Card';
 import { Field, Textarea, valueOf } from '@/components/ui/Field';
 import { Honeypot } from '@/components/ui/Honeypot';
@@ -10,14 +11,6 @@ import { formKey, initialFormState } from '@/lib/forms';
 import { submitSolution } from './actions';
 
 type TaskOption = { id: number; order: number; title: string; lesson: { number: number } };
-
-/** Tab inserts four spaces instead of leaving the field — this is a code box. */
-function onCodeKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-  if (e.key !== 'Tab' || e.shiftKey) return;
-  e.preventDefault();
-  const el = e.currentTarget;
-  el.setRangeText('    ', el.selectionStart, el.selectionEnd, 'end');
-}
 
 export function SolutionSubmitForm({
   tasks,
@@ -54,16 +47,13 @@ export function SolutionSubmitForm({
           label="Код на Python"
           htmlFor="code"
           error={fe.code}
-          hint="До 20 КБ. Tab вставляет отступ."
+          hint="До 20 КБ. Tab/Shift+Tab — отступ, Enter сохраняет отступ."
         >
-          <Textarea
+          <CodeEditor
             id="code"
             name="code"
             rows={16}
             required
-            spellCheck={false}
-            className="font-mono"
-            onKeyDown={onCodeKeyDown}
             defaultValue={valueOf(state, 'code', '')}
           />
         </Field>

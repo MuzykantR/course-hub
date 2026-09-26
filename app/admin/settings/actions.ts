@@ -3,6 +3,7 @@
 import bcrypt from 'bcryptjs';
 import { revalidatePath } from 'next/cache';
 import { audit } from '@/lib/audit';
+import { runExport } from '@/lib/github/export';
 import { requireTeacher } from '@/lib/auth/guards';
 import { db } from '@/lib/db/client';
 import { getSettings } from '@/lib/db/settings';
@@ -58,4 +59,17 @@ export async function saveToggles(_prev: FormState, fd: FormData): Promise<FormS
   });
   revalidatePath('/admin/settings');
   return { ok: 'Сохранено.' };
+}
+
+export async function exportNow(_prev: FormState, _fd: FormData): Promise<FormState> {
+  await requireTeacher();
+  const result = await runExport('вручную', true);
+  await audit({
+    actor: 'teacher',
+    action: 'settings.github_export',
+    entity: 'settings',
+    meta: { ok: result.ok },
+  });
+  revalidatePath('/admin/settings');
+  return result.ok ? { ok: result.message } : { error: result.message };
 }

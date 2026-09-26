@@ -30,6 +30,7 @@ export type TaskFormValues = {
   verdict: string;
   runtime_ms: number | null;
   memory_mb: number | null;
+  tests: unknown;
 };
 
 type LessonOption = { id: number; number: number; title: string; date: string };
@@ -161,6 +162,27 @@ export function TaskForm({
             rows={14}
             className="font-mono"
             defaultValue={v('statement_md')}
+          />
+        </Field>
+
+        <Field
+          label="Тесты для запуска в браузере (JSON, необязательно)"
+          htmlFor="tests"
+          error={fe.tests}
+          hint={
+            <>
+              Массив: <code className="font-mono">{'{"type": "assert", "name": "пример", "code": "assert f(2) == 4"}'}</code> или{' '}
+              <code className="font-mono">{'{"type": "io", "name": "ввод", "input": "2 3", "expected": "5"}'}</code>
+            </>
+          }
+        >
+          <Textarea
+            id="tests"
+            name="tests"
+            rows={6}
+            spellCheck={false}
+            className="font-mono text-xs"
+            defaultValue={valueOf(state, 'tests', task.tests ? JSON.stringify(task.tests, null, 2) : '')}
           />
         </Field>
 

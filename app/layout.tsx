@@ -21,6 +21,14 @@ export const metadata: Metadata = {
   description: 'Занятия, задачи, решения и доклады курса по Python',
   icons: { icon: '/favicon.svg' },
   robots: { index: false, follow: false },
+  // Link previews (Telegram, VK…) land on /login for crawlers, so the card is site-wide.
+  openGraph: {
+    type: 'website',
+    locale: 'ru_RU',
+    siteName: 'Python HSE Hub',
+    title: 'Python HSE Hub',
+    description: 'Занятия, задачи с семинаров, решения студентов и доклады по библиотекам Python',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

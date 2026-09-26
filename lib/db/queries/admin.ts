@@ -96,7 +96,7 @@ export async function adminTask(id: number) {
     await db()
       .from('tasks')
       .select(
-        'id, lesson_id, order, title, statement_md, difficulty, tags, assigned_student_id, status, verdict, runtime_ms, memory_mb',
+        'id, lesson_id, order, title, statement_md, difficulty, tags, assigned_student_id, status, verdict, runtime_ms, memory_mb, tests',
       )
       .eq('id', id)
       .maybeSingle(),

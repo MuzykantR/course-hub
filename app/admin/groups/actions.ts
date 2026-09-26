@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { audit } from '@/lib/audit';
+import { scheduleExport } from '@/lib/github/export';
 import { requireTeacher } from '@/lib/auth/guards';
 import { db } from '@/lib/db/client';
 import { parseForm, uniqueViolation, type FormState } from '@/lib/forms';
@@ -53,6 +54,7 @@ export async function saveGroup(_prev: FormState, fd: FormData): Promise<FormSta
     entity: 'group',
     entityId: id,
   });
+  scheduleExport('группа');
   revalidatePath('/admin/groups');
   redirect(`/admin/groups/${id}`);
 }
@@ -64,6 +66,7 @@ export async function deleteGroup(fd: FormData): Promise<void> {
   const { error } = await db().from('groups').delete().eq('id', id);
   if (error) throw new Error(error.message);
   await audit({ actor: 'teacher', action: 'group.delete', entity: 'group', entityId: id });
+  scheduleExport('удалена группа');
   revalidatePath('/admin/groups');
   redirect('/admin/groups');
 }
@@ -128,6 +131,7 @@ export async function saveStudent(_prev: FormState, fd: FormData): Promise<FormS
       parsed.values,
     );
   await audit({ actor: 'teacher', action: 'student.update', entity: 'student', entityId: id });
+  scheduleExport('студент');
   revalidatePath(`/admin/groups/${parsed.data.group_id}`);
   redirect(`/admin/groups/${parsed.data.group_id}`);
 }
@@ -187,6 +191,7 @@ export async function deleteStudent(fd: FormData): Promise<void> {
     .single();
   if (error) throw new Error(error.message);
   await audit({ actor: 'teacher', action: 'student.delete', entity: 'student', entityId: id });
+  scheduleExport('удалён студент');
   revalidatePath(`/admin/groups/${data.group_id}`);
   redirect(`/admin/groups/${data.group_id}`);
 }

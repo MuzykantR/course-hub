@@ -1,7 +1,7 @@
 import 'server-only';
 import { db } from '@/lib/db/client';
 import { MAX_IMAGE_BYTES, MAX_IMAGES_PER_REPORT, sniffImage } from '@/lib/images';
-import { slugify, uniqueSlug } from '@/lib/slug';
+import { reportSlugBase, slugify, uniqueSlug } from '@/lib/slug';
 
 export const REPORT_BUCKET = 'report-assets';
 
@@ -11,7 +11,7 @@ export async function freeReportSlug(
   title: string,
   ownId?: number,
 ): Promise<string> {
-  const base = slugify(`${library} ${title}`, 80) || 'report';
+  const base = reportSlugBase(library, title);
   const { data, error } = await db().from('reports').select('id, slug').like('slug', `${base}%`);
   if (error) throw new Error(error.message);
   return uniqueSlug(

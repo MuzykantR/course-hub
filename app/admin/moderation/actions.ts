@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { audit } from '@/lib/audit';
+import { scheduleExport } from '@/lib/github/export';
 import { requireTeacher } from '@/lib/auth/guards';
 import { db } from '@/lib/db/client';
 import type { FormState } from '@/lib/forms';
@@ -58,6 +59,7 @@ export async function moderate(_prev: FormState, fd: FormData): Promise<FormStat
     entityId: id,
     meta: comment ? { comment } : {},
   });
+  if (decision === 'approve') scheduleExport(kind === 'solution' ? 'одобрено решение' : 'одобрен доклад');
   revalidatePath('/admin/moderation');
   revalidatePath('/admin');
   return { ok: decision === 'approve' ? 'Одобрено и опубликовано.' : 'Отклонено.' };

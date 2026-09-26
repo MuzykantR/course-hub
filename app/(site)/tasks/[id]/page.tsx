@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Presentation } from 'lucide-react';
 import { CodeBlock } from '@/components/code/CodeBlock';
+import { PyRunner } from '@/components/code/PyRunner';
 import { MarkdownContent } from '@/components/markdown/MarkdownContent';
 import { Badge, DifficultyBadge, TagLink, VerdictBadge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
@@ -12,6 +13,7 @@ import { getTask } from '@/lib/db/queries/content';
 import { getPeople } from '@/lib/db/queries/people';
 import { formatDate } from '@/lib/format';
 import { kbHref } from '@/lib/validation/kb';
+import { parseTaskTests } from '@/lib/python/protocol';
 import { parseIdParam } from '@/lib/validation/params';
 
 type Props = { params: Promise<{ id: string }> };
@@ -90,6 +92,17 @@ export default async function TaskPage({ params }: Props) {
             <p className="text-theme-muted">Условие ещё не добавлено.</p>
           )}
         </Card>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <SectionTitle>Попробовать</SectionTitle>
+        <PyRunner
+          tests={parseTaskTests(task.tests)}
+          samples={task.solutions.map((s) => ({
+            label: people.studentById.get(s.author_student_id)?.name ?? 'Решение',
+            code: s.code,
+          }))}
+        />
       </section>
 
       <section className="flex flex-col gap-4">
