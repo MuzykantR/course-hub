@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function GroupPage({ params }: Props) {
   await requireSession();
   const slug = parseSlugParam((await params).slug);
-  const [people, counts] = await Promise.all([getPeople(), getContributionCounts()]);
+  const [people, countsOf] = await Promise.all([getPeople(), getContributionCounts()]);
   const group = people.groupBySlug.get(slug);
   if (!group) notFound();
   const students = people.students.filter((s) => s.groupId === group.id);
@@ -43,18 +43,17 @@ export default async function GroupPage({ params }: Props) {
         <EmptyState>В группе пока нет студентов.</EmptyState>
       ) : (
         <div className="overflow-x-auto rounded-card border-2 border-theme-border bg-theme-card shadow-neo">
-          <table className="w-full min-w-[28rem] text-sm">
+          <table className="w-full min-w-[20rem] text-sm">
             <thead className="bg-theme-cardMuted text-left">
               <tr>
                 <th className="px-4 py-3 font-bold">Студент</th>
-                <th className="px-4 py-3 text-right font-bold">У доски</th>
-                <th className="px-4 py-3 text-right font-bold">Решения</th>
+                <th className="px-4 py-3 text-right font-bold">Задачи</th>
                 <th className="px-4 py-3 text-right font-bold">Доклады</th>
               </tr>
             </thead>
             <tbody>
               {students.map((s) => {
-                const c = counts.get(s.id) ?? { tasks: 0, solutions: 0, reports: 0 };
+                const c = countsOf(s.id);
                 return (
                   <tr key={s.id} className="border-t border-theme-borderSubtle">
                     <td className="px-4 py-3">
@@ -63,7 +62,6 @@ export default async function GroupPage({ params }: Props) {
                       </Link>
                     </td>
                     <td className="px-4 py-3 text-right font-mono">{c.tasks || '—'}</td>
-                    <td className="px-4 py-3 text-right font-mono">{c.solutions || '—'}</td>
                     <td className="px-4 py-3 text-right font-mono">{c.reports || '—'}</td>
                   </tr>
                 );

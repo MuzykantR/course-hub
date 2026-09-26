@@ -148,45 +148,76 @@ export const getReport = cache(async (slug: string) => {
 
 // ───────── people pages ─────────
 
+export type StudentTask = {
+  id: number;
+  title: string;
+  date: string | null;
+  /** Verdict of the board attempt — only when the task was assigned to this student. */
+  verdict: string | null;
+  hasSolution: boolean;
+};
+
+/** A student's tasks: assigned to them and/or with their approved solution, newest first. */
 export async function getStudentContributions(studentId: number) {
   const [assigned, solutions, reports] = await Promise.all([
     db()
       .from('tasks')
-      .select('id, title, verdict, status, lesson:lessons(date)')
+      .select('id, title, verdict, lesson:lessons(date)')
       .eq('assigned_student_id', studentId)
-      .neq('status', 'draft')
-      .order('created_at', { ascending: false }),
+      .neq('status', 'draft'),
     db()
       .from('solutions')
-      .select('id, is_featured, created_at, task:tasks!inner(id, title, status)')
+      .select('task:tasks!inner(id, title, status, lesson:lessons(date))')
       .eq('author_student_id', studentId)
       .eq('status', 'approved')
-      .neq('task.status', 'draft')
-      .order('created_at', { ascending: false }),
+      .neq('task.status', 'draft'),
     db()
       .from('report_authors')
       .select('report:reports!inner(slug, title, library, status, created_at)')
       .eq('student_id', studentId)
       .eq('report.status', 'approved'),
   ]);
+
+  const tasks = new Map<number, StudentTask>();
+  for (const t of rows(assigned, 'student tasks')) {
+    tasks.set(t.id, {
+      id: t.id,
+      title: t.title,
+      date: t.lesson?.date ?? null,
+      verdict: t.verdict,
+      hasSolution: false,
+    });
+  }
+  for (const { task } of rows(solutions, 'student solutions')) {
+    const existing = tasks.get(task.id);
+    if (existing) existing.hasSolution = true;
+    else
+      tasks.set(task.id, {
+        id: task.id,
+        title: task.title,
+        date: task.lesson?.date ?? null,
+        verdict: null,
+        hasSolution: true,
+      });
+  }
+
   return {
-    assigned: rows(assigned, 'student tasks'),
-    solutions: rows(solutions, 'student solutions'),
+    tasks: [...tasks.values()].sort((a, b) => (b.date ?? '').localeCompare(a.date ?? '')),
     reports: rows(reports, 'student reports').map((r) => r.report),
   };
 }
 
-/** Published contributions per student id. */
+/** Per student id: distinct tasks (assigned or solved) and approved reports. */
 export async function getContributionCounts() {
   const [assigned, solutions, authors] = await Promise.all([
     db()
       .from('tasks')
-      .select('assigned_student_id')
+      .select('id, assigned_student_id')
       .neq('status', 'draft')
       .not('assigned_student_id', 'is', null),
     db()
       .from('solutions')
-      .select('author_student_id, task:tasks!inner(status)')
+      .select('task_id, author_student_id, task:tasks!inner(status)')
       .eq('status', 'approved')
       .neq('task.status', 'draft'),
     db()
@@ -194,17 +225,25 @@ export async function getContributionCounts() {
       .select('student_id, report:reports!inner(status)')
       .eq('report.status', 'approved'),
   ]);
-  const counts = new Map<number, { tasks: number; solutions: number; reports: number }>();
-  const bump = (id: number | null, key: 'tasks' | 'solutions' | 'reports') => {
-    if (id === null) return;
-    const c = counts.get(id) ?? { tasks: 0, solutions: 0, reports: 0 };
-    c[key] += 1;
-    counts.set(id, c);
+
+  const taskIds = new Map<number, Set<number>>();
+  const addTask = (studentId: number, taskId: number) => {
+    const set = taskIds.get(studentId) ?? new Set<number>();
+    set.add(taskId);
+    taskIds.set(studentId, set);
   };
-  rows(assigned, 'counts tasks').forEach((r) => bump(r.assigned_student_id, 'tasks'));
-  rows(solutions, 'counts solutions').forEach((r) => bump(r.author_student_id, 'solutions'));
-  rows(authors, 'counts reports').forEach((r) => bump(r.student_id, 'reports'));
-  return counts;
+  for (const t of rows(assigned, 'counts tasks')) addTask(t.assigned_student_id!, t.id);
+  for (const s of rows(solutions, 'counts solutions')) addTask(s.author_student_id, s.task_id);
+
+  const reportCounts = new Map<number, number>();
+  for (const a of rows(authors, 'counts reports')) {
+    reportCounts.set(a.student_id, (reportCounts.get(a.student_id) ?? 0) + 1);
+  }
+
+  return (studentId: number) => ({
+    tasks: taskIds.get(studentId)?.size ?? 0,
+    reports: reportCounts.get(studentId) ?? 0,
+  });
 }
 
 // ───────── home ─────────

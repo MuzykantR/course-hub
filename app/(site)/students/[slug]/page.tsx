@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Presentation } from 'lucide-react';
-import { Badge, VerdictBadge } from '@/components/ui/Badge';
+import { VerdictBadge } from '@/components/ui/Badge';
 import { EmptyState, PageHeader, SectionTitle } from '@/components/ui/PageHeader';
 import { requireSession } from '@/lib/auth/guards';
 import { getStudentContributions } from '@/lib/db/queries/content';
@@ -31,7 +30,7 @@ export default async function StudentPage({ params }: Props) {
   const student = people.studentBySlug.get(slug);
   if (!student) notFound();
   const group = people.groupById.get(student.groupId);
-  const { assigned, solutions, reports } = await getStudentContributions(student.id);
+  const { tasks, reports } = await getStudentContributions(student.id);
 
   return (
     <>
@@ -49,42 +48,19 @@ export default async function StudentPage({ params }: Props) {
       </PageHeader>
 
       <section className="flex flex-col gap-3">
-        <SectionTitle count={assigned.length}>Задачи у доски</SectionTitle>
-        {assigned.length === 0 ? (
-          <EmptyState>Пока не выходил к доске.</EmptyState>
+        <SectionTitle count={tasks.length}>Задачи</SectionTitle>
+        {tasks.length === 0 ? (
+          <EmptyState>Опубликованных задач пока нет.</EmptyState>
         ) : (
-          assigned.map((t) => (
+          tasks.map((t) => (
             <div key={t.id} className={rowClass}>
               <Link href={`/tasks/${t.id}`} className="font-bold hover:underline">
                 {t.title}
               </Link>
-              <VerdictBadge verdict={t.verdict} />
-              {t.lesson && (
-                <span className="ml-auto text-xs text-theme-muted">
-                  {formatDate(t.lesson.date)}
-                </span>
+              {t.verdict && <VerdictBadge verdict={t.verdict} />}
+              {t.date && (
+                <span className="ml-auto text-xs text-theme-muted">{formatDate(t.date)}</span>
               )}
-            </div>
-          ))
-        )}
-      </section>
-
-      <section className="flex flex-col gap-3">
-        <SectionTitle count={solutions.length}>Решения</SectionTitle>
-        {solutions.length === 0 ? (
-          <EmptyState>Опубликованных решений пока нет.</EmptyState>
-        ) : (
-          solutions.map((s) => (
-            <div key={s.id} className={rowClass}>
-              <Link href={`/tasks/${s.task.id}`} className="font-bold hover:underline">
-                {s.task.title}
-              </Link>
-              {s.is_featured && (
-                <Badge tone="accent">
-                  <Presentation className="h-3.5 w-3.5" /> У доски
-                </Badge>
-              )}
-              <span className="ml-auto text-xs text-theme-muted">{formatDate(s.created_at)}</span>
             </div>
           ))
         )}
