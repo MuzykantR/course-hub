@@ -6,4 +6,7 @@ if (!password || password.length < 8) {
   console.error('Pass a password of at least 8 characters.');
   process.exit(1);
 }
-console.log(bcrypt.hashSync(password, 12));
+const hash = bcrypt.hashSync(password, 12);
+console.log(`Raw hash (Vercel env, SQL):  ${hash}`);
+// Next.js expands $VARS inside .env files, so every $ must be escaped there.
+console.log(`.env.local line:             TEACHER_PASSWORD_HASH=${hash.replaceAll('$', '\\$')}`);

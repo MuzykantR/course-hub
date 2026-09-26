@@ -10,7 +10,9 @@ Run the gate in order and stop at the first failure; fix it, then restart from t
 1. `npm run typecheck`
 2. `npm run lint`
 3. `npm test`
-4. `npm run build`
+4. `npm run build` — stop the dev server first (`preview_stop`) and `rm -rf .next` after the build:
+   both share `.next`, and a build under a running `next dev` breaks it with
+   `__webpack_modules__[moduleId] is not a function`.
 5. Smoke in the built-in browser (`preview_start` name `course-hub`, port 3000):
    - `/login` renders; wrong password shows an error; unauthenticated `/`, `/kb`, `/admin` redirect to `/login`.
    - After student login: `/`, `/kb`, one lesson, one task, one report render without console errors (`read_console_messages` onlyErrors).
