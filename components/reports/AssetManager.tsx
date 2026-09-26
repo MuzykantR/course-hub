@@ -6,12 +6,22 @@ import { ConfirmForm, FormMessage, SubmitButton } from '@/components/admin/FormB
 import { Card } from '@/components/ui/Card';
 import { initialFormState } from '@/lib/forms';
 import { MAX_IMAGES_PER_REPORT } from '@/lib/images';
-import { deleteReportAsset, uploadReportAsset } from './actions';
+import type { FormState } from '@/lib/forms';
 
 type Asset = { id: number; path: string; mime: string; size: number };
 
-export function AssetManager({ reportId, assets }: { reportId: number; assets: Asset[] }) {
-  const [state, action] = useActionState(uploadReportAsset, initialFormState);
+export function AssetManager({
+  reportId,
+  assets,
+  uploadAction,
+  deleteAction,
+}: {
+  reportId: number;
+  assets: Asset[];
+  uploadAction: (prev: FormState, fd: FormData) => Promise<FormState>;
+  deleteAction: (fd: FormData) => Promise<void>;
+}) {
+  const [state, action] = useActionState(uploadAction, initialFormState);
 
   return (
     <Card className="flex flex-col gap-4">
@@ -43,8 +53,8 @@ export function AssetManager({ reportId, assets }: { reportId: number; assets: A
                   <p className="text-xs text-theme-muted">{Math.round(a.size / 1024)} КБ</p>
                 </div>
                 <ConfirmForm
-                  action={deleteReportAsset}
-                  hidden={{ assetId: a.id }}
+                  action={deleteAction}
+                  hidden={{ assetId: a.id, reportId }}
                   confirm={`Удалить ${name}?`}
                 >
                   <button

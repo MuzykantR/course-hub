@@ -9,8 +9,8 @@ import { requireTeacher } from '@/lib/auth/guards';
 import { adminReport, lessonOptions } from '@/lib/db/queries/admin';
 import { getPeople } from '@/lib/db/queries/people';
 import { parseIdParam } from '@/lib/validation/params';
-import { deleteReport } from '../actions';
-import { AssetManager } from '../AssetManager';
+import { AssetManager } from '@/components/reports/AssetManager';
+import { deleteReport, deleteReportAsset, uploadReportAsset } from '../actions';
 import { ReportForm } from '../ReportForm';
 
 export const metadata: Metadata = { title: 'Доклад' };
@@ -55,7 +55,12 @@ export default async function EditReportPage({
           Сохранено.
         </p>
       )}
-      <AssetManager reportId={report.id} assets={report.assets} />
+      <AssetManager
+        reportId={report.id}
+        assets={report.assets}
+        uploadAction={uploadReportAsset}
+        deleteAction={deleteReportAsset}
+      />
       <ReportForm
         report={report}
         groups={people.groups}

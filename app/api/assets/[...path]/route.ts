@@ -32,7 +32,17 @@ export async function GET(_req: Request, { params }: { params: Promise<{ path: s
     .maybeSingle();
   if (error) throw new Error(error.message);
   if (!asset) return notFound();
-  if (asset.report.status !== 'approved' && session.role !== 'teacher') return notFound();
+  if (asset.report.status !== 'approved' && session.role !== 'teacher') {
+    // Authors may see images of their own report while it's under review.
+    if (session.role !== 'student' || !session.studentId) return notFound();
+    const { data: author } = await db()
+      .from('report_authors')
+      .select('student_id')
+      .eq('report_id', asset.report.id)
+      .eq('student_id', session.studentId)
+      .maybeSingle();
+    if (!author) return notFound();
+  }
 
   const { data: file, error: dlError } = await db().storage.from('report-assets').download(path);
   if (dlError || !file) return notFound();
@@ -40,7 +50,9 @@ export async function GET(_req: Request, { params }: { params: Promise<{ path: s
   return new Response(file, {
     headers: {
       'Content-Type': asset.mime,
-      'Cache-Control': 'private, max-age=3600',
+      // Unpublished images must not outlive the permission check in a shared browser cache.
+      'Cache-Control':
+        asset.report.status === 'approved' ? 'private, max-age=3600' : 'private, no-store',
       'X-Content-Type-Options': 'nosniff',
       'Content-Security-Policy': "default-src 'none'; sandbox",
     },

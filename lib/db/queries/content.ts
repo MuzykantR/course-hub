@@ -284,3 +284,26 @@ export async function getHomeData() {
     latestLesson,
   };
 }
+
+/** Published tasks for the "suggest a solution" form, newest lesson first. */
+export async function publishedTaskOptions() {
+  const data = rows(
+    await db()
+      .from('tasks')
+      .select('id, order, title, lesson:lessons!inner(number, date)')
+      .neq('status', 'draft'),
+    'published task options',
+  );
+  return data.sort((a, b) => b.lesson.date.localeCompare(a.lesson.date) || a.order - b.order);
+}
+
+export async function lessonList() {
+  return rows(
+    await db()
+      .from('lessons')
+      .select('id, number, title, date')
+      .order('date', { ascending: false })
+      .order('number', { ascending: false }),
+    'lesson list',
+  );
+}

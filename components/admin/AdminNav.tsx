@@ -6,6 +6,7 @@ import { cn } from '@/lib/cn';
 
 const LINKS = [
   { href: '/admin', label: 'Обзор', exact: true },
+  { href: '/admin/moderation', label: 'Модерация' },
   { href: '/admin/lessons', label: 'Занятия' },
   { href: '/admin/tasks', label: 'Задачи' },
   { href: '/admin/solutions', label: 'Решения' },
@@ -14,7 +15,7 @@ const LINKS = [
   { href: '/admin/settings', label: 'Настройки' },
 ];
 
-export function AdminNav() {
+export function AdminNav({ pending = 0 }: { pending?: number }) {
   const pathname = usePathname();
   return (
     <nav aria-label="Админка" className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
@@ -33,6 +34,11 @@ export function AdminNav() {
             )}
           >
             {label}
+            {href === '/admin/moderation' && pending > 0 && (
+              <span className="ml-1.5 rounded-pill bg-theme-accent px-1.5 text-xs text-theme-accentText">
+                {pending}
+              </span>
+            )}
           </Link>
         );
       })}

@@ -9,7 +9,7 @@ import { writeSessionCookie } from '@/lib/auth/session';
 import { db } from '@/lib/db/client';
 import { limiter, RATE_RULES } from '@/lib/ratelimit';
 import { clientIp } from '@/lib/request';
-import { identifySchema } from '@/lib/validation/auth';
+import { identifySchema, safeNextPath } from '@/lib/validation/auth';
 
 export type IdentifyState = { error: string | null };
 
@@ -110,7 +110,7 @@ export async function identify(_prev: IdentifyState, formData: FormData): Promis
     studentId,
     pinVersion,
   });
-  redirect('/me');
+  redirect(safeNextPath(formData.get('next')?.toString() ?? '/me'));
 }
 
 export async function forgetIdentity(): Promise<void> {
