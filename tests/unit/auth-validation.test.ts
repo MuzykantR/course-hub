@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { identifySchema, pinSchema, safeNextPath } from '@/lib/validation/auth';
+import { toPrefixTsQuery } from '@/lib/validation/kb';
 
 describe('safeNextPath', () => {
   it.each([
@@ -35,5 +36,16 @@ describe('identifySchema', () => {
   });
   it('rejects an empty selection', () => {
     expect(identifySchema.safeParse({ studentId: '', pin: '1234' }).success).toBe(false);
+  });
+});
+
+describe('toPrefixTsQuery', () => {
+  it('turns words into AND-ed prefixes', () => {
+    expect(toPrefixTsQuery('Массив  numpy')).toBe('массив:* & numpy:*');
+    expect(toPrefixTsQuery('two-pointers')).toBe('two:* & pointers:*');
+  });
+  it('drops tsquery operators and returns null for empty input', () => {
+    expect(toPrefixTsQuery("a' | !b & (c):*")).toBe('a:* & b:* & c:*');
+    expect(toPrefixTsQuery('!!! ---')).toBeNull();
   });
 });

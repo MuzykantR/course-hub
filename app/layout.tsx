@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { JetBrains_Mono, Space_Grotesk } from 'next/font/google';
 import { AmbientBackground } from '@/components/layout/AmbientBackground';
 import { themeInitScript } from '@/lib/theme';
+import 'katex/dist/katex.min.css';
 import './globals.css';
 
 const sans = Space_Grotesk({
