@@ -1,0 +1,4 @@
+.next
+node_modules
+lib/db/types.gen.ts
+supabase/.temp

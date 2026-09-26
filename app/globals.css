@@ -1,0 +1,189 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-base: #fafafb;
+  --bg-surface: #f4f5f7;
+  --bg-card: rgba(255, 255, 255, 0.88);
+  --bg-card-hover: #ffffff;
+  --bg-card-muted: #ebecef;
+  --bg-input: #ffffff;
+  --border-base: #191a23;
+  --border-subtle: #d1d5db;
+  --text-main: #191a23;
+  --text-secondary: #374151;
+  --text-muted: #6b7280;
+  --accent-main: #b9ff66;
+  --accent-hover: #a8f550;
+  --accent-text: #191a23;
+  --shadow-neo: 0px 4px 0px #191a23;
+  --shadow-neo-sm: 0px 2px 0px #191a23;
+  --shadow-neo-lg: 0px 8px 0px #191a23;
+  --code-bg: #191a23;
+  --code-text: #f3f4f6;
+  --code-header: #23242e;
+}
+
+.dark {
+  --bg-base: #0b0c10;
+  --bg-surface: #14151f;
+  --bg-card: rgba(30, 31, 43, 0.85);
+  --bg-card-hover: rgba(37, 38, 54, 0.95);
+  --bg-card-muted: #13141d;
+  --bg-input: #13141d;
+  --border-base: #2d2e3f;
+  --border-subtle: #252636;
+  --text-main: #f9fafb;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+  --accent-main: #b9ff66;
+  --accent-hover: #a8f550;
+  --accent-text: #191a23;
+  --shadow-neo: 0px 4px 0px #000000;
+  --shadow-neo-sm: 0px 2px 0px #000000;
+  --shadow-neo-lg: 0px 8px 0px #000000;
+  --code-bg: #13141d;
+  --code-text: #e5e7eb;
+  --code-header: #1e1f2b;
+}
+
+@layer base {
+  html {
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    font-family: var(--font-sans), 'Space Grotesk', system-ui, sans-serif;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+    overflow-x: hidden;
+  }
+
+  code,
+  pre,
+  kbd,
+  samp,
+  input.font-mono,
+  .font-mono {
+    font-family:
+      var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+      'Courier New', monospace;
+    font-variant-ligatures: none !important;
+    font-feature-settings:
+      'liga' 0,
+      'calt' 0,
+      'dlig' 0 !important;
+    letter-spacing: 0.02em;
+  }
+}
+
+/* Smooth Floating Orbs Animations */
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(40px, -60px) scale(1.12);
+  }
+  66% {
+    transform: translate(-35px, 35px) scale(0.92);
+  }
+}
+
+@keyframes float-reverse {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(-50px, 50px) scale(0.9);
+  }
+  66% {
+    transform: translate(35px, -40px) scale(1.15);
+  }
+}
+
+@keyframes float-gentle {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(25px, 35px) scale(1.08);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.65;
+    transform: scale(1.08);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 18s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: float-reverse 24s ease-in-out infinite;
+}
+
+.animate-float-gentle {
+  animation: float-gentle 15s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 10s ease-in-out infinite;
+}
+
+/* Background Grid Pattern */
+.bg-grid-pattern {
+  background-size: 36px 36px;
+  background-image:
+    linear-gradient(to right, rgba(25, 26, 35, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(25, 26, 35, 0.05) 1px, transparent 1px);
+}
+
+.dark .bg-grid-pattern {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-base);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* KaTeX spacing */
+.katex-display {
+  margin: 1em 0 !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5rem 0;
+}
