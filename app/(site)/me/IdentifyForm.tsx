@@ -18,7 +18,7 @@ const pinProps = {
   className: 'font-mono tracking-[0.4em]',
 } as const;
 
-export function IdentifyForm({ students }: { students: StudentOption[] }) {
+export function IdentifyForm({ students, next }: { students: StudentOption[]; next: string }) {
   const [state, action, pending] = useActionState<IdentifyState, FormData>(identify, {
     error: null,
   });
@@ -43,6 +43,7 @@ export function IdentifyForm({ students }: { students: StudentOption[] }) {
 
   return (
     <form action={action} className="mt-6 flex flex-col gap-4">
+      <input type="hidden" name="next" value={next} />
       <div className="flex flex-col gap-2">
         <Label htmlFor="studentId">Я —</Label>
         <Select

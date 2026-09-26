@@ -32,7 +32,7 @@ function Stat({ label, value }: { label: string; value: React.ReactNode }) {
 }
 
 export default async function TaskPage({ params }: Props) {
-  await requireSession();
+  const session = await requireSession();
   const id = parseIdParam((await params).id);
   const [task, people] = await Promise.all([getTask(id), getPeople()]);
   if (!task) notFound();
@@ -93,7 +93,17 @@ export default async function TaskPage({ params }: Props) {
       </section>
 
       <section className="flex flex-col gap-4">
-        <SectionTitle count={task.solutions.length}>Решения</SectionTitle>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <SectionTitle count={task.solutions.length}>Решения</SectionTitle>
+          {session.role === 'student' && (
+            <Link
+              href={`/submit/solution?task=${task.id}`}
+              className="inline-flex items-center gap-2 rounded-pill border-2 border-theme-border bg-theme-accent px-4 py-2 text-sm font-bold text-theme-accentText shadow-neo-sm transition hover:-translate-y-0.5"
+            >
+              + Предложить решение
+            </Link>
+          )}
+        </div>
         {task.solutions.length === 0 ? (
           <EmptyState>Решений пока нет.</EmptyState>
         ) : (

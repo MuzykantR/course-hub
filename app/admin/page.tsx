@@ -35,6 +35,16 @@ const ACTION_LABELS: Record<string, string> = {
   'settings.course_password': 'сменил пароль курса',
   'settings.logout_students': 'разлогинил студентов',
   'settings.update': 'изменил настройки',
+  'solution.submit': 'прислал решение',
+  'report.submit': 'прислал доклад',
+  'solution.withdraw': 'отозвал решение',
+  'report.withdraw': 'отозвал доклад',
+  'solution.approve': 'одобрил решение',
+  'solution.reject': 'отклонил решение',
+  'report.approve': 'одобрил доклад',
+  'report.reject': 'отклонил доклад',
+  'solution.honeypot': 'бот? (ловушка, решение)',
+  'report.honeypot': 'бот? (ловушка, доклад)',
 };
 
 export default async function AdminHome() {
@@ -54,13 +64,13 @@ export default async function AdminHome() {
     {
       label: 'решений ждут',
       value: counts.pendingSolutions,
-      href: '/admin/solutions?status=pending',
+      href: '/admin/moderation',
       hot: counts.pendingSolutions > 0,
     },
     {
       label: 'докладов ждут',
       value: counts.pendingReports,
-      href: '/admin/reports?status=pending',
+      href: '/admin/moderation',
       hot: counts.pendingReports > 0,
     },
     {

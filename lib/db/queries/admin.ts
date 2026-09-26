@@ -262,12 +262,45 @@ export async function dashboardCounts() {
     db().from('students').select('id', head),
   ]);
   for (const r of [pendingSolutions, pendingReports, drafts, students]) {
-    if (r.error) throw new Error(`dashboard: ${r.error.message}`);
+    // HEAD requests carry no error body, so include status/code to keep failures diagnosable.
+    if (r.error)
+      throw new Error(
+        `dashboard: ${r.error.message || r.error.code || 'request failed'} (HTTP ${r.status})`,
+      );
   }
   return {
     pendingSolutions: pendingSolutions.count ?? 0,
     pendingReports: pendingReports.count ?? 0,
     drafts: drafts.count ?? 0,
     students: students.count ?? 0,
+  };
+}
+
+// ───────── moderation ─────────
+
+/** Everything waiting for review, oldest first (fair queue). */
+export async function moderationQueue() {
+  const [solutions, reports] = await Promise.all([
+    db()
+      .from('solutions')
+      .select(
+        'id, code, explanation_md, created_at, author_student_id, task:tasks!inner(id, title, lesson:lessons!inner(number))',
+      )
+      .eq('status', 'pending')
+      .order('created_at'),
+    db()
+      .from('reports')
+      .select(
+        'id, title, library, summary, content_md, tags, group_id, created_at, report_authors(student_id)',
+      )
+      .eq('status', 'pending')
+      .order('created_at'),
+  ]);
+  return {
+    solutions: rows(solutions, 'moderation solutions'),
+    reports: rows(reports, 'moderation reports').map((r) => ({
+      ...r,
+      authorIds: r.report_authors.map((a) => a.student_id),
+    })),
   };
 }

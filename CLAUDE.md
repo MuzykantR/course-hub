@@ -46,6 +46,11 @@ Pyodide in a Web Worker. Deployed on Vercel from GitHub (`main` → prod, PRs �
   `valueOf/valuesOf/checkedOf` for defaults and `<form key={formKey(state)}>` — React 19 resets forms after
   an action and `<select defaultValue>` would otherwise snap back. Teacher-only reads live in
   `lib/db/queries/admin.ts`. Content hashes (`lib/hash.ts`) back the unique constraints on solutions/reports.
+- **Student submissions** (`app/(site)/submit/actions.ts`): `requireIdentifiedStudent()` → zod → honeypot
+  (`website` field; fake success) → `submissionPrecheck` (submissions open, student not blocked, ≤ 3 pending)
+  → `reserveSubmissionSlots` (60 s cooldown, 10/day per student, 20/day per IP; all-or-nothing) → insert as
+  `pending` with a content hash → audit. Moderation (`app/admin/moderation`) updates only rows still `pending`.
+  Report images of unpublished reports are visible to the teacher and the report's authors only, `no-store`.
 - **Read queries** (`lib/db/queries/`) return only published content: tasks with status ≠ draft,
   approved solutions/reports. Keep draft/pending visibility for admin queries.
 - **Schema changes only via migration files** in `supabase/migrations/`; regenerate

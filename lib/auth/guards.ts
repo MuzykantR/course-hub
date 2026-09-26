@@ -51,11 +51,14 @@ export async function requireStudent(): Promise<Extract<Session, { role: 'studen
   return session;
 }
 
-/** A student who has confirmed who they are with their current PIN. */
-export async function requireIdentifiedStudent(): Promise<
+/**
+ * A student who has confirmed who they are with their current PIN. Unidentified students go
+ * to /me and come back to `returnTo` after entering the PIN.
+ */
+export async function requireIdentifiedStudent(returnTo?: string): Promise<
   Extract<Session, { role: 'student' }> & { studentId: number }
 > {
   const session = await requireStudent();
-  if (!session.studentId) redirect('/me');
+  if (!session.studentId) redirect(returnTo ? `/me?next=${encodeURIComponent(returnTo)}` : '/me');
   return { ...session, studentId: session.studentId };
 }

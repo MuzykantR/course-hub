@@ -20,7 +20,7 @@ export default async function KbPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  await requireSession();
+  const session = await requireSession();
   const filters = parseKbFilters(await searchParams);
   const [{ items, total }, tags, people] = await Promise.all([
     listKb(filters),
@@ -39,6 +39,22 @@ export default async function KbPage({
           Все опубликованные задачи с семинаров и доклады по библиотекам. Фильтры сохраняются в
           ссылке — ей можно поделиться.
         </p>
+        {session.role === 'student' && (
+          <div className="flex flex-wrap gap-2 text-sm font-bold">
+            <Link
+              href="/submit/solution"
+              className="rounded-pill border-2 border-theme-border bg-theme-accent px-4 py-2 text-theme-accentText shadow-neo-sm"
+            >
+              + Предложить решение
+            </Link>
+            <Link
+              href="/submit/report"
+              className="rounded-pill border-2 border-theme-border bg-theme-card px-4 py-2 shadow-neo-sm"
+            >
+              + Предложить доклад
+            </Link>
+          </div>
+        )}
       </PageHeader>
 
       <form

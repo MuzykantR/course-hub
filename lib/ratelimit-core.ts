@@ -27,6 +27,8 @@ export const RATE_RULES = {
   submitStudent: { max: 10, windowMs: 24 * 60 * MINUTE },
   /** Submissions per IP per day. */
   submitIp: { max: 20, windowMs: 24 * 60 * MINUTE },
+  /** Image uploads to one's own pending reports per student per day. */
+  uploadStudent: { max: 30, windowMs: 24 * 60 * MINUTE },
   /** Minimum gap between two submissions of one student. */
   submitCooldown: { max: 1, windowMs: MINUTE },
 } satisfies Record<string, RateRule>;
