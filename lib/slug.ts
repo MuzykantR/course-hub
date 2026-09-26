@@ -56,3 +56,11 @@ export function uniqueSlug(base: string, taken: Iterable<string>): string {
     if (!used.has(candidate)) return candidate;
   }
 }
+
+/** Report slug from library + title, without repeating the library ("seaborn: …" → "seaborn-…"). */
+export function reportSlugBase(library: string, title: string): string {
+  const lib = slugify(library, 30);
+  const t = slugify(title, 80);
+  const combined = !lib || t === lib || t.startsWith(`${lib}-`) ? t : slugify(`${library} ${title}`, 80);
+  return combined || 'report';
+}

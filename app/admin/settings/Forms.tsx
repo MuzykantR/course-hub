@@ -5,7 +5,7 @@ import { FormMessage, SubmitButton } from '@/components/admin/FormBits';
 import { Checkbox, Field } from '@/components/ui/Field';
 import { Input } from '@/components/ui/Input';
 import { initialFormState } from '@/lib/forms';
-import { changeCoursePassword, saveToggles } from './actions';
+import { changeCoursePassword, exportNow, saveToggles } from './actions';
 
 export function CoursePasswordForm() {
   const [state, action] = useActionState(changeCoursePassword, initialFormState);
@@ -65,6 +65,25 @@ export function TogglesForm({
       <FormMessage state={state} />
       <div>
         <SubmitButton>Сохранить</SubmitButton>
+      </div>
+    </form>
+  );
+}
+
+export function ExportNowForm({ disabled }: { disabled: boolean }) {
+  const [state, action] = useActionState(exportNow, initialFormState);
+  return (
+    <form action={action} className="flex flex-col gap-3">
+      <FormMessage state={state} />
+      <div>
+        <SubmitButton variant="secondary" pendingText="Экспортируем…">
+          Экспортировать сейчас
+        </SubmitButton>
+        {disabled && (
+          <p className="mt-2 text-xs text-theme-muted">
+            Сначала задайте GITHUB_EXPORT_TOKEN и GITHUB_EXPORT_REPO.
+          </p>
+        )}
       </div>
     </form>
   );

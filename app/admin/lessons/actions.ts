@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { audit } from '@/lib/audit';
+import { scheduleExport } from '@/lib/github/export';
 import { requireTeacher } from '@/lib/auth/guards';
 import { db } from '@/lib/db/client';
 import { parseForm, type FormState } from '@/lib/forms';
@@ -43,6 +44,7 @@ export async function saveLesson(_prev: FormState, fd: FormData): Promise<FormSt
     entity: 'lesson',
     entityId: id,
   });
+  scheduleExport('занятие');
   revalidatePath('/admin/lessons');
   redirect(`/admin/lessons/${id}?saved=1`);
 }
@@ -53,6 +55,7 @@ export async function deleteLesson(fd: FormData): Promise<void> {
   const { error } = await db().from('lessons').delete().eq('id', id);
   if (error) throw new Error(error.message);
   await audit({ actor: 'teacher', action: 'lesson.delete', entity: 'lesson', entityId: id });
+  scheduleExport('удалено занятие');
   revalidatePath('/admin/lessons');
   redirect('/admin/lessons');
 }

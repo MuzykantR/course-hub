@@ -92,7 +92,7 @@ export const getTask = cache(async (id: number) => {
     await db()
       .from('tasks')
       .select(
-        'id, order, title, statement_md, difficulty, tags, status, verdict, runtime_ms, memory_mb, assigned_student_id, lesson:lessons(id, date, number, title)',
+        'id, order, title, statement_md, difficulty, tags, status, verdict, runtime_ms, memory_mb, assigned_student_id, tests, lesson:lessons(id, date, number, title)',
       )
       .eq('id', id)
       .neq('status', 'draft')

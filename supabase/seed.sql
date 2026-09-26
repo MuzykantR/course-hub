@@ -54,9 +54,14 @@ begin
 
   insert into public.tasks (lesson_id, "order", title, statement_md, difficulty, tags, assigned_student_id, status, verdict, runtime_ms, memory_mb)
   values (l1, 1, 'Два числа с заданной суммой',
-    E'Дан **отсортированный** список `nums` и число `target`. Верните индексы двух элементов, сумма которых равна `target`.\n\n```python\n>>> two_sum([1, 3, 4, 6, 9], 10)\n(1, 4)\n```\n\nОграничения: $2 \le n \le 10^5$.',
+    E'Дан **отсортированный** список `nums` и число `target`. Верните индексы двух элементов, сумма которых равна `target`.\n\n```python\n>>> two_sum([1, 3, 4, 6, 9], 13)\n(2, 4)\n```\n\nОграничения: $2 \le n \le 10^5$.',
     'easy', '{arrays,two-pointers}', anna, 'solved', 'accepted', 48, 17.2)
   returning id into t1;
+  update public.tasks set tests = '[
+    {"type": "assert", "name": "пример из условия", "code": "assert two_sum([1, 3, 4, 6, 9], 13) == (2, 4)"},
+    {"type": "assert", "name": "два элемента", "code": "assert two_sum([2, 5], 7) == (0, 1)"},
+    {"type": "assert", "name": "отрицательные", "code": "assert two_sum([-5, -1, 0, 3], -6) == (0, 1)"}
+  ]'::jsonb where id = t1;
   insert into public.tasks (lesson_id, "order", title, statement_md, difficulty, tags, assigned_student_id, status, verdict)
   values (l1, 2, 'Слияние отсортированных списков',
     E'Слейте два отсортированных списка в один отсортированный за $O(n + m)$.',

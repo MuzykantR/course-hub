@@ -11,6 +11,8 @@ Full plan: `C:\Users\rodio\.claude\plans\hazy-orbiting-shannon.md`. UI copy is R
 - Single test: `npx vitest run tests/unit/cn.test.ts` (or `-t '<name>'`). Imports use the `@/` alias → repo root.
 - Formatting: a PostToolUse hook (`.claude/hooks/format.mjs`) runs Prettier on every edited file — don't hand-format.
 - `/verify` — project skill running the whole gate + browser smoke. Run before every commit.
+- `npx tsx scripts/import-reports.ts <folder> --group <slug> [--dry-run]` — bulk-import Markdown reports
+  (front matter, authors matched by name, sibling images uploaded). Always `--dry-run` first.
 - `node scripts/hash-password.mjs '<pw>'` — bcrypt hash for env/settings (prints the `\$`-escaped
   `.env.local` line: Next.js expands `$` in .env files, an unescaped hash loads as empty)
 - Supabase dev project `hse-dev`, ref `zysycnawewufesrarjgo` (eu-central-1). Apply migrations via MCP
@@ -51,6 +53,13 @@ Pyodide in a Web Worker. Deployed on Vercel from GitHub (`main` → prod, PRs �
   → `reserveSubmissionSlots` (60 s cooldown, 10/day per student, 20/day per IP; all-or-nothing) → insert as
   `pending` with a content hash → audit. Moderation (`app/admin/moderation`) updates only rows still `pending`.
   Report images of unpublished reports are visible to the teacher and the report's authors only, `no-store`.
+- **Python runner** (`lib/python/*`, `components/code/PyRunner.tsx`): Pyodide (CDN, ESM) in a Web Worker,
+  10 s budget → worker terminated and recreated. Next bundles workers as *classic* scripts, so the worker
+  shadows `importScripts` and loads Pyodide via `import()`. Network APIs are locked while user code runs
+  (published solutions execute in the viewer's browser). Task tests live in `tasks.tests` (`lib/python/protocol.ts`).
+- **GitHub export** (`lib/github/*`): any change to published content calls `scheduleExport()` (runs via
+  `after()`), which rebuilds the whole export repo from the DB as one commit (`layout.ts` is pure/tested).
+  Needs `GITHUB_EXPORT_TOKEN` + `GITHUB_EXPORT_REPO` and the settings toggle; status shows on /admin/settings.
 - **Read queries** (`lib/db/queries/`) return only published content: tasks with status ≠ draft,
   approved solutions/reports. Keep draft/pending visibility for admin queries.
 - **Schema changes only via migration files** in `supabase/migrations/`; regenerate

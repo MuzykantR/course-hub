@@ -272,6 +272,10 @@ export type Database = {
         Row: {
           course_password_hash: string;
           github_export_enabled: boolean;
+          github_last_commit_url: string | null;
+          github_last_export_at: string | null;
+          github_last_export_message: string | null;
+          github_last_export_ok: boolean | null;
           id: boolean;
           pwd_version: number;
           submissions_open: boolean;
@@ -280,6 +284,10 @@ export type Database = {
         Insert: {
           course_password_hash: string;
           github_export_enabled?: boolean;
+          github_last_commit_url?: string | null;
+          github_last_export_at?: string | null;
+          github_last_export_message?: string | null;
+          github_last_export_ok?: boolean | null;
           id?: boolean;
           pwd_version?: number;
           submissions_open?: boolean;
@@ -288,6 +296,10 @@ export type Database = {
         Update: {
           course_password_hash?: string;
           github_export_enabled?: boolean;
+          github_last_commit_url?: string | null;
+          github_last_export_at?: string | null;
+          github_last_export_message?: string | null;
+          github_last_export_ok?: boolean | null;
           id?: boolean;
           pwd_version?: number;
           submissions_open?: boolean;

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { taskTestsSchema } from '@/lib/python/protocol';
 
 // Russian fallback messages for anything without an explicit one below.
 z.config(z.locales.ru());
@@ -75,6 +76,31 @@ export const lessonSchema = z.object({
 });
 export const LESSON_ARRAYS = ['groupIds'] as const;
 
+/** Tests for the in-browser runner: JSON text in the form, jsonb (or null) in the DB. */
+export const testsField = z
+  .string()
+  .default('')
+  .transform((s, ctx) => {
+    if (!s.trim()) return null;
+    let raw: unknown;
+    try {
+      raw = JSON.parse(s);
+    } catch {
+      ctx.addIssue({ code: 'custom', message: 'Тесты: это не JSON' });
+      return z.NEVER;
+    }
+    const parsed = taskTestsSchema.safeParse(raw);
+    if (!parsed.success) {
+      const issue = parsed.error.issues[0];
+      ctx.addIssue({
+        code: 'custom',
+        message: `Тесты: ${issue?.path.join('.') || 'формат'} — ${issue?.message ?? 'неверно'}`,
+      });
+      return z.NEVER;
+    }
+    return parsed.data;
+  });
+
 export const taskSchema = z.object({
   lesson_id: id,
   order: z.coerce.number('Укажите номер').int('Целое число').min(1, 'От 1').max(99, 'До 99'),
@@ -98,6 +124,7 @@ export const taskSchema = z.object({
     empty,
     z.coerce.number('Число').min(0, 'Не меньше 0').max(100_000, 'Слишком много').optional(),
   ),
+  tests: testsField,
 });
 
 export const solutionSchema = z.object({

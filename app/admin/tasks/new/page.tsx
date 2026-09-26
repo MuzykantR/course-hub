@@ -48,6 +48,7 @@ export default async function NewTaskPage({
           verdict: 'not_checked',
           runtime_ms: null,
           memory_mb: null,
+          tests: null,
         }}
       />
     </>

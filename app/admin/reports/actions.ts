@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { audit } from '@/lib/audit';
+import { scheduleExport } from '@/lib/github/export';
 import { requireTeacher } from '@/lib/auth/guards';
 import { db } from '@/lib/db/client';
 import { parseForm, uniqueViolation, type FormState } from '@/lib/forms';
@@ -78,6 +79,7 @@ export async function saveReport(_prev: FormState, fd: FormData): Promise<FormSt
     entityId: id,
     meta: { status: d.status, slug },
   });
+  scheduleExport('доклад');
   revalidatePath('/admin/reports');
   redirect(`/admin/reports/${id}?saved=1`);
 }
@@ -89,6 +91,7 @@ export async function deleteReport(fd: FormData): Promise<void> {
   const { error } = await db().from('reports').delete().eq('id', id);
   if (error) throw new Error(error.message);
   await audit({ actor: 'teacher', action: 'report.delete', entity: 'report', entityId: id });
+  scheduleExport('удалён доклад');
   revalidatePath('/admin/reports');
   redirect('/admin/reports');
 }
@@ -106,6 +109,7 @@ export async function uploadReportAsset(_prev: FormState, fd: FormData): Promise
     entityId: reportId,
     meta: { path: stored.path },
   });
+  scheduleExport('картинка доклада');
   revalidatePath(`/admin/reports/${reportId}`);
   return { ok: `Загружено. Вставьте в текст: ![описание](${stored.name})` };
 }
@@ -121,5 +125,6 @@ export async function deleteReportAsset(fd: FormData): Promise<void> {
     entityId: asset.report_id,
     meta: { path: asset.path },
   });
+  scheduleExport('удалена картинка');
   revalidatePath(`/admin/reports/${asset.report_id}`);
 }
