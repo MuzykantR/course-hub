@@ -95,3 +95,12 @@ begin
   insert into public.report_authors values (r1, anna), (r1, boris), (r2, gleb);
 end
 $seed$;
+
+-- Demo rows above use placeholder hashes; recompute them exactly like lib/hash.ts
+-- (CRLF → LF, trim, sha256) so duplicate detection works on seeded content too.
+update public.solutions
+set content_hash = encode(sha256(convert_to(btrim(replace(code, E'\r\n', E'\n'), E' \n\t\r'), 'UTF8')), 'hex')
+where content_hash like 'seed-%';
+update public.reports
+set content_hash = encode(sha256(convert_to(btrim(replace(content_md, E'\r\n', E'\n'), E' \n\t\r'), 'UTF8')), 'hex')
+where content_hash like 'seed-%';

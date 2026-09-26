@@ -40,6 +40,12 @@ Pyodide in a Web Worker. Deployed on Vercel from GitHub (`main` → prod, PRs �
   relative images resolve only under an `assetBase` like `/api/assets/reports/<id>`) →
   `components/markdown/Markdown.tsx` (hast → React). Code blocks: server-only Shiki in
   `components/code/CodeBlock.tsx`. Markdown images sit inside `<p>` — wrap them only in `<span>`.
+- **Admin forms** (`app/admin/**`): server action `(prev: FormState, fd) => FormState` → `requireTeacher()`
+  first (actions are callable by ID from any page, the middleware doesn't protect them) → `parseForm(schema, fd)`
+  from `lib/forms.ts` → write → `audit()` → `redirect`/`revalidatePath`. Client forms use `useActionState`,
+  `valueOf/valuesOf/checkedOf` for defaults and `<form key={formKey(state)}>` — React 19 resets forms after
+  an action and `<select defaultValue>` would otherwise snap back. Teacher-only reads live in
+  `lib/db/queries/admin.ts`. Content hashes (`lib/hash.ts`) back the unique constraints on solutions/reports.
 - **Read queries** (`lib/db/queries/`) return only published content: tasks with status ≠ draft,
   approved solutions/reports. Keep draft/pending visibility for admin queries.
 - **Schema changes only via migration files** in `supabase/migrations/`; regenerate
