@@ -20,7 +20,7 @@ Full plan: `C:\Users\rodio\.claude\plans\hazy-orbiting-shannon.md`. UI copy is R
 ## Stack
 
 Next.js 15 App Router · React 19 · TypeScript (strict) · Tailwind 3 · Supabase (Postgres + Storage) ·
-zod · jose (JWT cookie sessions) · bcryptjs · react-markdown + remark-gfm/math + rehype-katex · Shiki ·
+zod · jose (JWT cookie sessions) · bcryptjs · unified (remark-gfm/math → rehype-katex) · Shiki ·
 Pyodide in a Web Worker. Deployed on Vercel from GitHub (`main` → prod, PRs → previews).
 
 ## Architecture rules (non-negotiable)
@@ -35,7 +35,13 @@ Pyodide in a Web Worker. Deployed on Vercel from GitHub (`main` → prod, PRs �
   invalidated by `settings.pwd_version`, which only `lib/auth/guards.ts` checks — so **every page and
   action calls a guard itself** (`requireSession/Teacher/Student/IdentifiedStudent`); layouts don't
   re-run on client navigation. PIN attempts are counted atomically in SQL (`pin_attempt_begin`).
-- **Markdown** from users is rendered without raw HTML — never add `rehype-raw`.
+- **Markdown** from users is rendered without raw HTML — never add `rehype-raw` or `allowDangerousHtml`.
+  Pipeline: `lib/markdown/pipeline.ts` (md → hast, heading ids + TOC, link/image URL policy;
+  relative images resolve only under an `assetBase` like `/api/assets/reports/<id>`) →
+  `components/markdown/Markdown.tsx` (hast → React). Code blocks: server-only Shiki in
+  `components/code/CodeBlock.tsx`. Markdown images sit inside `<p>` — wrap them only in `<span>`.
+- **Read queries** (`lib/db/queries/`) return only published content: tasks with status ≠ draft,
+  approved solutions/reports. Keep draft/pending visibility for admin queries.
 - **Schema changes only via migration files** in `supabase/migrations/`; regenerate
   `lib/db/types.gen.ts` afterwards; run Supabase advisors.
 - Secrets live in `.env.local` / Vercel env (never committed; Claude may read `.env.local` to debug config).
