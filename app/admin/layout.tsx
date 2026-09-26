@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { AdminNav } from '@/components/admin/AdminNav';
 import { Header } from '@/components/layout/Header';
 import { requireTeacher } from '@/lib/auth/guards';
 
@@ -9,9 +10,10 @@ export const metadata: Metadata = { title: { default: 'Админка', template
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await requireTeacher();
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-6 md:py-10">
+    <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-6 md:py-10">
       <Header session={session} />
-      <main className="flex flex-col gap-8">{children}</main>
+      <AdminNav />
+      <main className="flex flex-col gap-6">{children}</main>
     </div>
   );
 }
