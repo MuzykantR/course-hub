@@ -1,5 +1,5 @@
 import { BookOpen, Code2, Users } from 'lucide-react';
-import { ThemeToggle } from '@/components/layout/ThemeToggle';
+import { requireSession } from '@/lib/auth/guards';
 
 const features = [
   {
@@ -11,22 +11,11 @@ const features = [
   { icon: Users, title: 'Группы', text: 'Вклад каждого студента в одном месте.' },
 ];
 
-export default function Home() {
-  return (
-    <main className="mx-auto flex max-w-5xl flex-col gap-10 px-4 py-10 md:py-16">
-      <header className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl border-2 border-theme-border bg-theme-accent font-mono text-sm font-bold text-theme-accentText shadow-neo-sm">
-            py
-          </div>
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-theme-muted">Курс</p>
-            <p className="font-bold">Python HSE Hub</p>
-          </div>
-        </div>
-        <ThemeToggle />
-      </header>
+export default async function Home() {
+  await requireSession();
 
+  return (
+    <>
       <section className="rounded-card-lg border-2 border-theme-border bg-theme-card p-6 shadow-neo-lg backdrop-blur md:p-10">
         <span className="inline-block rounded-pill border-2 border-theme-border bg-theme-accent px-3 py-1 text-xs font-bold text-theme-accentText">
           Скоро открытие
@@ -52,6 +41,6 @@ export default function Home() {
           </article>
         ))}
       </section>
-    </main>
+    </>
   );
 }

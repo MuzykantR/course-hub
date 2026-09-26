@@ -23,8 +23,7 @@
       "Bash(npx vercel ls*)",
       "Bash(npx vercel inspect*)",
       "Bash(npx vercel logs*)"
-    ],
-    "deny": ["Read(./.env)", "Read(./.env.local)", "Read(./.env.production*)"]
+    ]
   },
   "hooks": {
     "PostToolUse": [

@@ -7,9 +7,15 @@ Full plan: `C:\Users\rodio\.claude\plans\hazy-orbiting-shannon.md`. UI copy is R
 ## Commands
 
 - `npm run dev` — dev server on :3000 (built-in browser: `preview_start` name `course-hub`)
-- `npm run typecheck` · `npm run lint` · `npm test` (Vitest, `tests/unit`) · `npm run build`
+- `npm run typecheck` · `npm run lint` · `npm test` (Vitest, `tests/unit/**/*.test.ts`, node env) · `npm run build`
+- Single test: `npx vitest run tests/unit/cn.test.ts` (or `-t '<name>'`). Imports use the `@/` alias → repo root.
+- Formatting: a PostToolUse hook (`.claude/hooks/format.mjs`) runs Prettier on every edited file — don't hand-format.
 - `/verify` — project skill running the whole gate + browser smoke. Run before every commit.
-- `node scripts/hash-password.mjs '<pw>'` — bcrypt hash for env/settings
+- `node scripts/hash-password.mjs '<pw>'` — bcrypt hash for env/settings (prints the `\$`-escaped
+  `.env.local` line: Next.js expands `$` in .env files, an unescaped hash loads as empty)
+- Supabase dev project `hse-dev`, ref `zysycnawewufesrarjgo` (eu-central-1). Apply migrations via MCP
+  `apply_migration`, then rename the local file to the version from `list_migrations`.
+  `supabase/seed.sql` is dev-only (course password `python-dev`).
 
 ## Stack
 
@@ -25,12 +31,22 @@ Pyodide in a Web Worker. Deployed on Vercel from GitHub (`main` → prod, PRs �
 - **Every mutation** = Server Action that (1) checks the session with a guard from `lib/auth/guards.ts`,
   (2) parses input with a zod schema from `lib/validation`, (3) applies rate limits from
   `lib/ratelimit.ts` for student actions, (4) writes `audit_log` via `lib/audit.ts`.
+- **Auth layers**: `middleware.ts` only checks the JWT signature (edge, no DB). Student sessions are
+  invalidated by `settings.pwd_version`, which only `lib/auth/guards.ts` checks — so **every page and
+  action calls a guard itself** (`requireSession/Teacher/Student/IdentifiedStudent`); layouts don't
+  re-run on client navigation. PIN attempts are counted atomically in SQL (`pin_attempt_begin`).
 - **Markdown** from users is rendered without raw HTML — never add `rehype-raw`.
 - **Schema changes only via migration files** in `supabase/migrations/`; regenerate
   `lib/db/types.gen.ts` afterwards; run Supabase advisors.
-- Secrets live in `.env.local` / Vercel env; Claude does not read `.env*` files (denied in settings).
+- Secrets live in `.env.local` / Vercel env (never committed; Claude may read `.env.local` to debug config).
+  `.env.example` lists every variable; its `DEV_COURSE_PASSWORD` (and `supabase/seed.sql`) are the only
+  credentials to use in browser tests.
 
 ## Layout
+
+Current state: scaffold only (`app/layout.tsx`, `app/page.tsx`, theme toggle, `lib/cn.ts`, `lib/theme.ts`,
+empty `supabase/migrations/`). The paths below are the **target** layout from the plan — create them
+there rather than inventing new locations.
 
 - `app/(site)/…` student-facing pages · `app/admin/…` teacher area · `app/login` · `app/api/assets`
 - `components/ui` neo-brutalist primitives · `components/markdown` · `components/code` · `components/kb` · `components/layout`
