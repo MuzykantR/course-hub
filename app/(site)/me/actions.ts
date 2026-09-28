@@ -71,6 +71,10 @@ export async function identify(_prev: IdentifyState, formData: FormData): Promis
       meta: { ip },
     });
   } else {
+    const ipSlot = await limiter.reserve(`pincheck:${await clientIp()}`, RATE_RULES.pinCheckIp);
+    if (!ipSlot.allowed) {
+      return { error: 'Слишком много попыток ввода PIN с этого устройства. Попробуйте через час.' };
+    }
     const { data: attempt, error: rpcError } = await db()
       .rpc('pin_attempt_begin', {
         p_student_id: studentId,

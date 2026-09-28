@@ -8,6 +8,10 @@ Full plan: `C:\Users\rodio\.claude\plans\hazy-orbiting-shannon.md`. UI copy is R
 
 - `npm run dev` — dev server on :3000 (built-in browser: `preview_start` name `course-hub`)
 - `npm run typecheck` · `npm run lint` · `npm test` (Vitest, `tests/unit/**/*.test.ts`, node env) · `npm run build`
+- `npm run test:e2e` — Playwright against the dev server + hse-dev; creates/removes its own `e2e-group` data.
+  Env is loaded in `tests/e2e/db.ts`, never in `playwright.config.ts` (it would mangle the bcrypt hash in the
+  spawned dev server). Scope alert locators to `main` (Next's route announcer is also `role=alert`).
+- `npx tsx scripts/init-settings.ts '<course pw>'` — creates the `settings` row on a fresh DB (prod never runs seed.sql).
 - Single test: `npx vitest run tests/unit/cn.test.ts` (or `-t '<name>'`). Imports use the `@/` alias → repo root.
 - Formatting: a PostToolUse hook (`.claude/hooks/format.mjs`) runs Prettier on every edited file — don't hand-format.
 - `/verify` — project skill running the whole gate + browser smoke. Run before every commit.

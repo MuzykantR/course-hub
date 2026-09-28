@@ -21,6 +21,8 @@ const MINUTE = 60_000;
 export const RATE_RULES = {
   /** Wrong passwords per IP. */
   login: { max: 5, windowMs: 10 * MINUTE },
+  /** PIN checks per IP across all students: stops brute-forcing many students in parallel. */
+  pinCheckIp: { max: 30, windowMs: 60 * MINUTE },
   /** First-time PIN setups per IP: stops one person claiming the whole student list. */
   pinSetup: { max: 3, windowMs: 24 * 60 * MINUTE },
   /** Submissions per student per day. */
