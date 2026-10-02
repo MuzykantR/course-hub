@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
+import { Badge } from '@/components/ui/Badge';
 import { cn } from '@/lib/cn';
 
 export function AdminTable({
@@ -57,40 +58,19 @@ export function AdminPageTitle({
 }
 
 export function StatusPill({ status }: { status: string }) {
-  const map: Record<string, { label: string; cls: string }> = {
-    draft: { label: 'Черновик', cls: 'bg-theme-cardMuted' },
-    assigned: {
-      label: 'Назначена',
-      cls: 'bg-sky-200 text-sky-950 dark:bg-sky-900 dark:text-sky-100',
-    },
-    solved: {
-      label: 'Решена',
-      cls: 'bg-emerald-200 text-emerald-950 dark:bg-emerald-900 dark:text-emerald-100',
-    },
-    pending: {
-      label: 'На модерации',
-      cls: 'bg-amber-200 text-amber-950 dark:bg-amber-900 dark:text-amber-100',
-    },
-    approved: {
-      label: 'Одобрено',
-      cls: 'bg-emerald-200 text-emerald-950 dark:bg-emerald-900 dark:text-emerald-100',
-    },
-    rejected: {
-      label: 'Отклонено',
-      cls: 'bg-rose-200 text-rose-950 dark:bg-rose-950 dark:text-rose-100',
-    },
+  const map: Record<
+    string,
+    { label: string; tone: 'neutral' | 'green' | 'red' | 'amber' | 'blue' }
+  > = {
+    draft: { label: 'Черновик', tone: 'neutral' },
+    assigned: { label: 'Назначена', tone: 'blue' },
+    solved: { label: 'Решена', tone: 'green' },
+    pending: { label: 'На модерации', tone: 'amber' },
+    approved: { label: 'Одобрено', tone: 'green' },
+    rejected: { label: 'Отклонено', tone: 'red' },
   };
-  const s = map[status] ?? { label: status, cls: 'bg-theme-card' };
-  return (
-    <span
-      className={cn(
-        'inline-flex whitespace-nowrap rounded-pill border-2 border-theme-border px-2.5 py-0.5 text-xs font-bold',
-        s.cls,
-      )}
-    >
-      {s.label}
-    </span>
-  );
+  const s = map[status] ?? { label: status, tone: 'neutral' as const };
+  return <Badge tone={s.tone}>{s.label}</Badge>;
 }
 
 export function FilterLinks({

@@ -20,12 +20,13 @@ export default {
           accent: 'var(--accent-main)',
           accentHover: 'var(--accent-hover)',
           accentText: 'var(--accent-text)',
+          codeBg: 'var(--code-bg)',
         },
       },
       fontFamily: {
-        sans: ['var(--font-sans)', 'Space Grotesk', 'Plus Jakarta Sans', 'system-ui', 'sans-serif'],
-        display: ['var(--font-sans)', 'Space Grotesk', 'sans-serif'],
-        mono: ['var(--font-mono)', 'JetBrains Mono', 'Fira Code', 'monospace'],
+        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'var(--font-sans)', 'sans-serif'],
+        mono: ['var(--font-mono)', 'monospace'],
       },
       boxShadow: {
         'neo-sm': 'var(--shadow-neo-sm)',

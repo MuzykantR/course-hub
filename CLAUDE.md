@@ -90,9 +90,16 @@ there rather than inventing new locations.
 
 Tokens in `app/globals.css` (`:root` / `.dark`), exposed as Tailwind `theme.*` colors
 (`bg-theme-card`, `border-theme-border`, `text-theme-muted`, `bg-theme-accent` = lime `#B9FF66`).
-Neo-brutalism: 2px `border-theme-border`, `shadow-neo-sm|neo|neo-lg`, `rounded-card|card-lg|pill`.
+Minimal palette: ink `#15161D`, paper `#F4F5F7`, white cards, lime only for the main action / active
+state; violet and cyan appear only in the ambient gradient (`components/layout/AmbientBackground.tsx`).
+Fonts with Cyrillic: Onest (`font-sans`, body), Unbounded (`font-display`, h1/h2 and big numbers),
+JetBrains Mono. Never use a Latin-only face — Russian text silently falls back to a system font.
+Status badges are neutral pills with a colored dot (`Badge tone=…`), not pastel fills.
+Code: light block in the light theme, dark in the dark one — Shiki emits both themes
+(`.shiki-dual`), `--code-*` tokens style the frame.
+Neo-brutalism: 2px `border-theme-border`, diagonal `shadow-neo-sm|neo|neo-lg`, `rounded-card|card-lg|pill`.
 Dark mode = `.dark` class on `<html>` (set pre-hydration by `lib/theme.ts`). Check both themes
-and mobile width for every UI change.
+and mobile width for every UI change. Approved mockups: https://claude.ai/artifact/VZGLfcPJoKwYjatiqDNPgK
 
 ## Workflow
 

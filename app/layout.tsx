@@ -1,13 +1,20 @@
 import type { Metadata } from 'next';
-import { JetBrains_Mono, Space_Grotesk } from 'next/font/google';
+import { JetBrains_Mono, Onest, Unbounded } from 'next/font/google';
 import { AmbientBackground } from '@/components/layout/AmbientBackground';
 import { themeInitScript } from '@/lib/theme';
 import 'katex/dist/katex.min.css';
 import './globals.css';
 
-const sans = Space_Grotesk({
-  subsets: ['latin', 'latin-ext'],
+// Both faces carry Cyrillic: the UI is Russian, a Latin-only face falls back per glyph.
+const sans = Onest({
+  subsets: ['latin', 'cyrillic'],
   variable: '--font-sans',
+  display: 'swap',
+});
+const display = Unbounded({
+  subsets: ['latin', 'cyrillic'],
+  weight: ['600', '700', '800'],
+  variable: '--font-display',
   display: 'swap',
 });
 const mono = JetBrains_Mono({
@@ -33,7 +40,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" suppressHydrationWarning className={`${sans.variable} ${mono.variable}`}>
+    <html lang="ru" suppressHydrationWarning className={`${sans.variable} ${display.variable} ${mono.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>

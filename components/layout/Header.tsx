@@ -13,13 +13,12 @@ export function Header({ session, studentName }: { session: Session; studentName
     <header className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-3">
         <Link href="/" className="flex shrink-0 items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl border-2 border-theme-border bg-theme-accent font-mono text-sm font-bold text-theme-accentText shadow-neo-sm">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl border-2 border-theme-border bg-theme-accent font-display text-sm font-extrabold text-theme-accentText shadow-neo-sm">
             py
           </div>
-          <div className="hidden lg:block">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-theme-muted">Курс</p>
-            <p className="font-bold">Python HSE Hub</p>
-          </div>
+          <span className="hidden font-display text-[15px] font-bold tracking-tight lg:block">
+            Python HSE Hub
+          </span>
         </Link>
         <NavLinks className="hidden md:flex" />
         <div className="flex min-w-0 items-center gap-2">
@@ -47,7 +46,7 @@ export function Header({ session, studentName }: { session: Session; studentName
           </form>
         </div>
       </div>
-      <NavLinks className="-mx-4 overflow-x-auto px-4 pb-1 md:hidden" />
+      <NavLinks className="max-w-full overflow-x-auto md:hidden" />
     </header>
   );
 }

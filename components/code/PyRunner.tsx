@@ -127,13 +127,13 @@ export function PyRunner({
       {result && (
         <div className="flex flex-col gap-3">
           <div className="overflow-hidden rounded-xl border-2 border-theme-border">
-            <div className="flex items-center gap-2 border-b border-white/10 bg-[var(--code-header)] px-4 py-2 font-mono text-xs text-slate-300">
+            <div className="flex items-center gap-2 border-b-2 border-[var(--code-rule)] bg-[var(--code-header)] px-4 py-2 font-mono text-xs text-[var(--code-meta)]">
               <TerminalSquare className="h-4 w-4" /> Вывод · {result.timeMs} мс
             </div>
             <pre className="max-h-72 overflow-auto bg-[var(--code-bg)] p-4 text-[13px] text-[var(--code-text)]">
               {result.stdout || (result.error ? '' : '(пусто)')}
               {result.truncated && '\n… вывод обрезан'}
-              {result.error && <span className="text-rose-300">{result.error}</span>}
+              {result.error && <span className="text-rose-700 dark:text-rose-300">{result.error}</span>}
             </pre>
           </div>
 
@@ -142,14 +142,22 @@ export function PyRunner({
               <p
                 className={cn(
                   'font-bold',
-                  passed === result.tests.length ? 'text-emerald-700 dark:text-emerald-300' : '',
+                  passed === result.tests.length ? 'text-emerald-700 dark:text-emerald-400' : '',
                 )}
               >
                 Тесты: {passed} из {result.tests.length}
               </p>
               <ul className="flex flex-col gap-2">
                 {result.tests.map((t, i) => (
-                  <li key={i} className="rounded-xl border-2 border-theme-borderSubtle p-3 text-sm">
+                  <li
+                    key={i}
+                    className={cn(
+                      'rounded-xl border-2 p-3 text-sm',
+                      t.passed
+                        ? 'border-theme-borderSubtle'
+                        : 'border-rose-300 bg-rose-50 dark:border-rose-900 dark:bg-rose-500/10',
+                    )}
+                  >
                     <div className="flex items-center gap-2 font-semibold">
                       {t.passed ? (
                         <CheckCircle2 className="h-4 w-4 text-emerald-600" />

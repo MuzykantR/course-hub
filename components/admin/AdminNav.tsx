@@ -18,7 +18,10 @@ const LINKS = [
 export function AdminNav({ pending = 0 }: { pending?: number }) {
   const pathname = usePathname();
   return (
-    <nav aria-label="Админка" className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
+    <nav
+      aria-label="Админка"
+      className="flex max-w-full gap-1 self-start overflow-x-auto rounded-pill border-2 border-theme-border bg-theme-card p-1 backdrop-blur"
+    >
       {LINKS.map(({ href, label, exact }) => {
         const active = exact ? pathname === href : pathname.startsWith(href);
         return (
@@ -27,15 +30,15 @@ export function AdminNav({ pending = 0 }: { pending?: number }) {
             href={href}
             aria-current={active ? 'page' : undefined}
             className={cn(
-              'whitespace-nowrap rounded-pill border-2 px-4 py-2 text-sm font-bold transition',
+              'inline-flex items-center whitespace-nowrap rounded-pill px-3.5 py-1.5 text-sm transition',
               active
-                ? 'border-theme-border bg-theme-main text-theme-base shadow-neo-sm'
-                : 'border-theme-border/30 bg-theme-card hover:border-theme-border',
+                ? 'bg-theme-accent font-bold text-theme-accentText'
+                : 'font-semibold hover:bg-theme-cardMuted',
             )}
           >
             {label}
             {href === '/admin/moderation' && pending > 0 && (
-              <span className="ml-1.5 rounded-pill bg-theme-accent px-1.5 text-xs text-theme-accentText">
+              <span className="ml-1.5 rounded-pill bg-theme-main px-1.5 text-xs font-bold text-theme-base">
                 {pending}
               </span>
             )}

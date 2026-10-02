@@ -34,3 +34,26 @@ export function plural(n: number, forms: [string, string, string]): string {
   if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return forms[1];
   return forms[2];
 }
+
+/**
+ * First paragraph of Markdown as plain text, cut at a word boundary: for previews of
+ * lesson descriptions. Headings, code blocks, images and link targets are dropped.
+ */
+export function plainExcerpt(md: string, max = 180): string {
+  const paragraph =
+    md
+      .replace(/```[\s\S]*?```/g, '')
+      .split(/\n\s*\n/)
+      .map((p) => p.trim())
+      .find((p) => p && !p.startsWith('#')) ?? '';
+  const text = paragraph
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/[*_`>~]/g, '')
+    .replace(/^\s*[-+]\s+/gm, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max);
+  return `${cut.slice(0, cut.lastIndexOf(' ') > 0 ? cut.lastIndexOf(' ') : max).replace(/[,.;:—-]+$/, '')}…`;
+}

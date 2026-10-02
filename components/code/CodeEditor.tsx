@@ -41,7 +41,7 @@ export const CodeEditor = forwardRef<HTMLTextAreaElement, Props>(function CodeEd
       autoCapitalize="off"
       autoCorrect="off"
       className={cn(
-        'min-h-[16rem] w-full resize-y rounded-xl border-2 border-theme-border bg-[var(--code-bg)] p-4 font-mono text-[13px] leading-relaxed text-[var(--code-text)] caret-theme-accent focus:outline-none focus:ring-2 focus:ring-theme-accent',
+        'min-h-[16rem] w-full resize-y rounded-xl border-2 border-theme-border bg-[var(--code-bg)] p-4 font-mono text-[13px] leading-relaxed text-[var(--code-text)] caret-theme-main focus:outline-none focus:ring-2 focus:ring-theme-accent',
         className,
       )}
       onKeyDown={(e) => {
