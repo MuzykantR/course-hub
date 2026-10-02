@@ -68,7 +68,7 @@ function Submission({
             >
               <button
                 type="submit"
-                className="font-semibold text-rose-700 hover:underline dark:text-rose-300"
+                className="font-semibold text-danger-700 hover:underline dark:text-danger-300"
               >
                 Отозвать
               </button>
@@ -164,7 +164,7 @@ export default async function MePage({
       {sent && (
         <p
           role="status"
-          className="rounded-xl border-2 border-theme-border bg-emerald-100 px-4 py-3 text-sm font-medium text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200"
+          className="rounded-xl border-2 border-theme-border bg-success-100 px-4 py-3 text-sm font-medium text-success-900 dark:bg-success-950 dark:text-success-200"
         >
           Заявка отправлена. Она появится на сайте после проверки преподавателем.
         </p>

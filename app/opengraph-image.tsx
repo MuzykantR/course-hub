@@ -31,12 +31,12 @@ export default async function OpengraphImage() {
         flexDirection: 'column',
         justifyContent: 'space-between',
         padding: 72,
-        background: '#FAFAFB',
+        background: '#F4F6FB',
         backgroundImage:
-          'linear-gradient(to right, rgba(25,26,35,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(25,26,35,0.06) 1px, transparent 1px)',
+          'linear-gradient(to right, rgba(15,45,105,0.07) 1px, transparent 1px), linear-gradient(to bottom, rgba(15,45,105,0.07) 1px, transparent 1px)',
         backgroundSize: '48px 48px',
         fontFamily: 'Inter',
-        color: '#191A23',
+        color: '#0F2D69',
       }}
     >
       <div
@@ -47,9 +47,9 @@ export default async function OpengraphImage() {
           width: 120,
           height: 120,
           borderRadius: 28,
-          border: '6px solid #191A23',
-          background: '#B9FF66',
-          boxShadow: '0 12px 0 #191A23',
+          border: '6px solid #0F2D69',
+          background: '#FED554',
+          boxShadow: '0 12px 0 #0F2D69',
           fontSize: 56,
         }}
       >
@@ -63,9 +63,9 @@ export default async function OpengraphImage() {
             alignSelf: 'flex-start',
             padding: '14px 28px',
             borderRadius: 999,
-            border: '5px solid #191A23',
+            border: '5px solid #0F2D69',
             background: '#FFFFFF',
-            boxShadow: '0 8px 0 #191A23',
+            boxShadow: '0 8px 0 #0F2D69',
             fontSize: 38,
           }}
         >

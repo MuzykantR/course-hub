@@ -30,7 +30,7 @@ export async function CodeBlock({
         <span className="font-mono text-xs font-bold uppercase tracking-wider text-theme-accent">
           {language === 'text' ? (lang ?? 'code') : language}
         </span>
-        {title && <span className="truncate font-mono text-xs text-slate-400">{title}</span>}
+        {title && <span className="truncate font-mono text-xs text-[var(--code-meta)]">{title}</span>}
       </div>
       <pre className="overflow-x-auto p-4 text-[13px] leading-relaxed text-[var(--code-text)]">
         {body}

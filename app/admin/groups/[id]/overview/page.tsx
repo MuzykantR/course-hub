@@ -12,11 +12,11 @@ import { parseIdParam } from '@/lib/validation/params';
 export const metadata: Metadata = { title: 'Обзор группы' };
 
 const VERDICT_MARK: Record<string, { mark: string; cls: string; title: string }> = {
-  accepted: { mark: '✓', cls: 'bg-emerald-300 text-emerald-950', title: 'У доски: Accepted' },
-  wrong_answer: { mark: '✗', cls: 'bg-rose-300 text-rose-950', title: 'У доски: Wrong Answer' },
-  tle: { mark: '⏱', cls: 'bg-amber-300 text-amber-950', title: 'У доски: Time Limit' },
-  runtime_error: { mark: '!', cls: 'bg-rose-300 text-rose-950', title: 'У доски: Runtime Error' },
-  not_checked: { mark: '•', cls: 'bg-sky-300 text-sky-950', title: 'У доски: не проверено' },
+  accepted: { mark: '✓', cls: 'bg-success-300 text-success-950', title: 'У доски: Accepted' },
+  wrong_answer: { mark: '✗', cls: 'bg-danger-300 text-danger-950', title: 'У доски: Wrong Answer' },
+  tle: { mark: '⏱', cls: 'bg-warning-300 text-warning-950', title: 'У доски: Time Limit' },
+  runtime_error: { mark: '!', cls: 'bg-danger-300 text-danger-950', title: 'У доски: Runtime Error' },
+  not_checked: { mark: '•', cls: 'bg-info-300 text-info-950', title: 'У доски: не проверено' },
 };
 
 export default async function GroupOverviewPage({ params }: { params: Promise<{ id: string }> }) {
@@ -75,7 +75,7 @@ export default async function GroupOverviewPage({ params }: { params: Promise<{ 
           решение опубликовано
         </span>
         <span className="inline-flex items-center gap-1">
-          <span className="inline-flex h-5 w-5 items-center justify-center rounded border-2 border-dashed border-amber-500 font-bold">
+          <span className="inline-flex h-5 w-5 items-center justify-center rounded border-2 border-dashed border-warning-500 font-bold">
             Р
           </span>
           решение ждёт модерации
@@ -143,7 +143,7 @@ export default async function GroupOverviewPage({ params }: { params: Promise<{ 
                                 'inline-flex h-6 w-6 items-center justify-center rounded border-2 font-bold',
                                 sol === 'approved'
                                   ? 'border-theme-border'
-                                  : 'border-dashed border-amber-500',
+                                  : 'border-dashed border-warning-500',
                               )}
                             >
                               Р

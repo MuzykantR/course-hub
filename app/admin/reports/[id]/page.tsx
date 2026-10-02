@@ -50,7 +50,7 @@ export default async function EditReportPage({
       {saved && (
         <p
           role="status"
-          className="rounded-xl border-2 border-theme-border bg-emerald-100 px-3 py-2 text-sm font-medium text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200"
+          className="rounded-xl border-2 border-theme-border bg-success-100 px-3 py-2 text-sm font-medium text-success-900 dark:bg-success-950 dark:text-success-200"
         >
           Сохранено.
         </p>
@@ -73,7 +73,7 @@ export default async function EditReportPage({
         confirm={`Удалить доклад «${report.title}» вместе с картинками? Это необратимо.`}
         className="border-t-2 border-dashed border-theme-borderSubtle pt-6"
       >
-        <Button type="submit" variant="secondary" className="text-rose-700 dark:text-rose-300">
+        <Button type="submit" variant="secondary" className="text-danger-700 dark:text-danger-300">
           Удалить доклад
         </Button>
       </ConfirmForm>

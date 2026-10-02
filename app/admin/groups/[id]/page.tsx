@@ -121,7 +121,7 @@ export default async function AdminGroupPage({ params }: { params: Promise<{ id:
           confirm={`Удалить группу «${group.name}»?`}
           className="border-t-2 border-dashed border-theme-borderSubtle pt-6"
         >
-          <Button type="submit" variant="secondary" className="text-rose-700 dark:text-rose-300">
+          <Button type="submit" variant="secondary" className="text-danger-700 dark:text-danger-300">
             Удалить группу
           </Button>
         </ConfirmForm>

@@ -45,7 +45,7 @@ export default async function AdminStudentPage({ params }: { params: Promise<{ i
         confirm={`Удалить студента ${student.full_name} вместе с его решениями и авторством докладов? Это необратимо.`}
         className="border-t-2 border-dashed border-theme-borderSubtle pt-6"
       >
-        <Button type="submit" variant="secondary" className="text-rose-700 dark:text-rose-300">
+        <Button type="submit" variant="secondary" className="text-danger-700 dark:text-danger-300">
           Удалить студента
         </Button>
       </ConfirmForm>

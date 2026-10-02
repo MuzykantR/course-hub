@@ -78,8 +78,8 @@ export default async function SettingsPage() {
                 <span
                   className={
                     settings.github_last_export_ok
-                      ? 'text-emerald-700 dark:text-emerald-300'
-                      : 'text-rose-700 dark:text-rose-300'
+                      ? 'text-success-700 dark:text-success-300'
+                      : 'text-danger-700 dark:text-danger-300'
                   }
                 >
                   {settings.github_last_export_ok ? '✓' : '✗'} {settings.github_last_export_message}

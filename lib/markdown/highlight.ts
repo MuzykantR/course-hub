@@ -2,7 +2,8 @@ import 'server-only';
 import { createHighlighter, type Highlighter } from 'shiki';
 import { createJavaScriptRegexEngine } from 'shiki/engine/javascript';
 
-const THEME = 'github-dark';
+// Readable on the navy code background (comments ≥ 4.5:1 on --code-bg in both themes).
+const THEME = 'github-dark-default';
 
 const LANGS = [
   'python',

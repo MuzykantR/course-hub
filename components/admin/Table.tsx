@@ -61,23 +61,23 @@ export function StatusPill({ status }: { status: string }) {
     draft: { label: 'Черновик', cls: 'bg-theme-cardMuted' },
     assigned: {
       label: 'Назначена',
-      cls: 'bg-sky-200 text-sky-950 dark:bg-sky-900 dark:text-sky-100',
+      cls: 'bg-info-300 text-info-950 dark:bg-info-900 dark:text-info-100',
     },
     solved: {
       label: 'Решена',
-      cls: 'bg-emerald-200 text-emerald-950 dark:bg-emerald-900 dark:text-emerald-100',
+      cls: 'bg-success-300 text-success-950 dark:bg-success-900 dark:text-success-100',
     },
     pending: {
       label: 'На модерации',
-      cls: 'bg-amber-200 text-amber-950 dark:bg-amber-900 dark:text-amber-100',
+      cls: 'bg-warning-300 text-warning-950 dark:bg-warning-900 dark:text-warning-100',
     },
     approved: {
       label: 'Одобрено',
-      cls: 'bg-emerald-200 text-emerald-950 dark:bg-emerald-900 dark:text-emerald-100',
+      cls: 'bg-success-300 text-success-950 dark:bg-success-900 dark:text-success-100',
     },
     rejected: {
       label: 'Отклонено',
-      cls: 'bg-rose-200 text-rose-950 dark:bg-rose-950 dark:text-rose-100',
+      cls: 'bg-danger-300 text-danger-950 dark:bg-danger-950 dark:text-danger-100',
     },
   };
   const s = map[status] ?? { label: status, cls: 'bg-theme-card' };

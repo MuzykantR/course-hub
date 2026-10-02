@@ -28,7 +28,7 @@ export function FormMessage({ state }: { state: FormState }) {
     return (
       <p
         role="alert"
-        className="rounded-xl border-2 border-theme-border bg-rose-100 px-3 py-2 text-sm font-medium text-rose-900 dark:bg-rose-950 dark:text-rose-200"
+        className="rounded-xl border-2 border-theme-border bg-danger-100 px-3 py-2 text-sm font-medium text-danger-900 dark:bg-danger-950 dark:text-danger-200"
       >
         {state.error}
       </p>
@@ -38,7 +38,7 @@ export function FormMessage({ state }: { state: FormState }) {
     return (
       <p
         role="status"
-        className="rounded-xl border-2 border-theme-border bg-emerald-100 px-3 py-2 text-sm font-medium text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200"
+        className="rounded-xl border-2 border-theme-border bg-success-100 px-3 py-2 text-sm font-medium text-success-900 dark:bg-success-950 dark:text-success-200"
       >
         {state.ok}
       </p>

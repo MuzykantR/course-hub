@@ -89,7 +89,10 @@ there rather than inventing new locations.
 ## Design system (ported from `../web_course`)
 
 Tokens in `app/globals.css` (`:root` / `.dark`), exposed as Tailwind `theme.*` colors
-(`bg-theme-card`, `border-theme-border`, `text-theme-muted`, `bg-theme-accent` = lime `#B9FF66`).
+(`bg-theme-card`, `border-theme-border`, `text-theme-muted`, `bg-theme-accent` = HSE yellow `#FED554`).
+Palette = HSE University brand book colors only (navy `#0F2D69` for borders/text/shadows, blue `#374B9B`); never
+HSE logos or brand graphics. Status colors: `success|danger|warning|info-{50…950}` and `hse.*` in
+`tailwind.config.mjs` — don't use raw Tailwind palettes (emerald, rose…). Text on white: ≥ 700 (warning ≥ 800).
 Neo-brutalism: 2px `border-theme-border`, `shadow-neo-sm|neo|neo-lg`, `rounded-card|card-lg|pill`.
 Dark mode = `.dark` class on `<html>` (set pre-hydration by `lib/theme.ts`). Check both themes
 and mobile width for every UI change.

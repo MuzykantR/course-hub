@@ -6,10 +6,10 @@ type Tone = 'neutral' | 'accent' | 'green' | 'red' | 'amber' | 'blue';
 const tones: Record<Tone, string> = {
   neutral: 'bg-theme-card text-theme-main',
   accent: 'bg-theme-accent text-theme-accentText',
-  green: 'bg-emerald-200 text-emerald-950 dark:bg-emerald-900 dark:text-emerald-100',
-  red: 'bg-rose-200 text-rose-950 dark:bg-rose-950 dark:text-rose-100',
-  amber: 'bg-amber-200 text-amber-950 dark:bg-amber-900 dark:text-amber-100',
-  blue: 'bg-sky-200 text-sky-950 dark:bg-sky-900 dark:text-sky-100',
+  green: 'bg-success-300 text-success-950 dark:bg-success-900 dark:text-success-100',
+  red: 'bg-danger-300 text-danger-950 dark:bg-danger-950 dark:text-danger-100',
+  amber: 'bg-warning-300 text-warning-950 dark:bg-warning-900 dark:text-warning-100',
+  blue: 'bg-info-300 text-info-950 dark:bg-info-900 dark:text-info-100',
 };
 
 const base =

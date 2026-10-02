@@ -22,7 +22,7 @@ export function Field({
       <Label htmlFor={htmlFor}>{label}</Label>
       {children}
       {error ? (
-        <p className="text-xs font-semibold text-rose-700 dark:text-rose-300">{error}</p>
+        <p className="text-xs font-semibold text-danger-700 dark:text-danger-300">{error}</p>
       ) : (
         hint && <p className="text-xs text-theme-muted">{hint}</p>
       )}

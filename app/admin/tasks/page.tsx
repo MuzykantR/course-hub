@@ -60,7 +60,7 @@ export default async function AdminTasksPage({
                 <Link href={`/admin/solutions?task=${t.id}`} className="hover:underline">
                   {t.approved}
                   {t.pending > 0 && (
-                    <span className="ml-1 font-bold text-amber-700 dark:text-amber-300">
+                    <span className="ml-1 font-bold text-warning-800 dark:text-warning-300">
                       +{t.pending} ждут
                     </span>
                   )}

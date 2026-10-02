@@ -60,7 +60,7 @@ export function AssetManager({
                   <button
                     type="submit"
                     aria-label={`Удалить ${name}`}
-                    className="rounded-lg p-2 text-rose-700 hover:bg-theme-cardMuted dark:text-rose-300"
+                    className="rounded-lg p-2 text-danger-700 hover:bg-theme-cardMuted dark:text-danger-300"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>

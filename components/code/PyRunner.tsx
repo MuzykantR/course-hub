@@ -110,7 +110,7 @@ export function PyRunner({
       {outcome?.kind === 'timeout' && (
         <p
           role="alert"
-          className="rounded-xl border-2 border-theme-border bg-amber-100 px-3 py-2 text-sm font-medium text-amber-950 dark:bg-amber-950 dark:text-amber-100"
+          className="rounded-xl border-2 border-theme-border bg-warning-100 px-3 py-2 text-sm font-medium text-warning-950 dark:bg-warning-950 dark:text-warning-100"
         >
           Время вышло ({RUN_TIMEOUT_MS / 1000} с) — возможно, бесконечный цикл. Python перезапущен.
         </p>
@@ -118,7 +118,7 @@ export function PyRunner({
       {outcome?.kind === 'error' && (
         <p
           role="alert"
-          className="rounded-xl border-2 border-theme-border bg-rose-100 px-3 py-2 text-sm font-medium text-rose-900 dark:bg-rose-950 dark:text-rose-200"
+          className="rounded-xl border-2 border-theme-border bg-danger-100 px-3 py-2 text-sm font-medium text-danger-900 dark:bg-danger-950 dark:text-danger-200"
         >
           {outcome.message}
         </p>
@@ -127,13 +127,13 @@ export function PyRunner({
       {result && (
         <div className="flex flex-col gap-3">
           <div className="overflow-hidden rounded-xl border-2 border-theme-border">
-            <div className="flex items-center gap-2 border-b border-white/10 bg-[var(--code-header)] px-4 py-2 font-mono text-xs text-slate-300">
+            <div className="flex items-center gap-2 border-b border-white/10 bg-[var(--code-header)] px-4 py-2 font-mono text-xs text-[var(--code-meta)]">
               <TerminalSquare className="h-4 w-4" /> Вывод · {result.timeMs} мс
             </div>
             <pre className="max-h-72 overflow-auto bg-[var(--code-bg)] p-4 text-[13px] text-[var(--code-text)]">
               {result.stdout || (result.error ? '' : '(пусто)')}
               {result.truncated && '\n… вывод обрезан'}
-              {result.error && <span className="text-rose-300">{result.error}</span>}
+              {result.error && <span className="text-danger-300">{result.error}</span>}
             </pre>
           </div>
 
@@ -142,7 +142,7 @@ export function PyRunner({
               <p
                 className={cn(
                   'font-bold',
-                  passed === result.tests.length ? 'text-emerald-700 dark:text-emerald-300' : '',
+                  passed === result.tests.length ? 'text-success-700 dark:text-success-300' : '',
                 )}
               >
                 Тесты: {passed} из {result.tests.length}
@@ -152,9 +152,9 @@ export function PyRunner({
                   <li key={i} className="rounded-xl border-2 border-theme-borderSubtle p-3 text-sm">
                     <div className="flex items-center gap-2 font-semibold">
                       {t.passed ? (
-                        <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                        <CheckCircle2 className="h-4 w-4 text-success-600" />
                       ) : (
-                        <XCircle className="h-4 w-4 text-rose-600" />
+                        <XCircle className="h-4 w-4 text-danger-600" />
                       )}
                       {t.name}
                     </div>

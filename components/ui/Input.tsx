@@ -25,7 +25,7 @@ export function FormError({ message }: { message?: string | null }) {
   return (
     <p
       role="alert"
-      className="rounded-xl border-2 border-theme-border bg-red-100 px-3 py-2 text-sm font-medium text-red-900 dark:bg-red-950 dark:text-red-200"
+      className="rounded-xl border-2 border-theme-border bg-danger-100 px-3 py-2 text-sm font-medium text-danger-900 dark:bg-danger-950 dark:text-danger-200"
     >
       {message}
     </p>

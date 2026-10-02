@@ -3,49 +3,54 @@
 @tailwind utilities;
 
 :root {
-  --bg-base: #fafafb;
-  --bg-surface: #f4f5f7;
-  --bg-card: rgba(255, 255, 255, 0.88);
+  /* Palette: HSE University brand book (colors only) — navy #0F2D69, blue #374B9B, yellow accent. */
+  --bg-base: #f4f6fb;
+  --bg-surface: #ebeff7;
+  --bg-card: rgba(255, 255, 255, 0.9);
   --bg-card-hover: #ffffff;
-  --bg-card-muted: #ebecef;
+  --bg-card-muted: #e4e9f4;
   --bg-input: #ffffff;
-  --border-base: #191a23;
-  --border-subtle: #d1d5db;
-  --text-main: #191a23;
-  --text-secondary: #374151;
-  --text-muted: #6b7280;
-  --accent-main: #b9ff66;
-  --accent-hover: #a8f550;
-  --accent-text: #191a23;
-  --shadow-neo: 0px 4px 0px #191a23;
-  --shadow-neo-sm: 0px 2px 0px #191a23;
-  --shadow-neo-lg: 0px 8px 0px #191a23;
-  --code-bg: #191a23;
-  --code-text: #f3f4f6;
-  --code-header: #23242e;
+  --border-base: #0f2d69;
+  --border-subtle: #c7cfe3;
+  --text-main: #0f2d69;
+  --text-secondary: #2e3d63;
+  --text-muted: #56627f;
+  --accent-main: #fed554;
+  --accent-hover: #f7b92b;
+  --accent-text: #0f2d69;
+  --shadow-neo: 0px 4px 0px #0f2d69;
+  --shadow-neo-sm: 0px 2px 0px #0f2d69;
+  --shadow-neo-lg: 0px 8px 0px #0f2d69;
+  --grid-line: rgba(15, 45, 105, 0.06);
+  --code-bg: #0b1e47;
+  --code-text: #eef2fa;
+  --code-header: #17367a;
+  --code-meta: #9fb0d6;
 }
 
 .dark {
-  --bg-base: #0b0c10;
-  --bg-surface: #14151f;
-  --bg-card: rgba(30, 31, 43, 0.85);
-  --bg-card-hover: rgba(37, 38, 54, 0.95);
-  --bg-card-muted: #13141d;
-  --bg-input: #13141d;
-  --border-base: #2d2e3f;
-  --border-subtle: #252636;
-  --text-main: #f9fafb;
-  --text-secondary: #d1d5db;
-  --text-muted: #9ca3af;
-  --accent-main: #b9ff66;
-  --accent-hover: #a8f550;
-  --accent-text: #191a23;
-  --shadow-neo: 0px 4px 0px #000000;
-  --shadow-neo-sm: 0px 2px 0px #000000;
-  --shadow-neo-lg: 0px 8px 0px #000000;
-  --code-bg: #13141d;
-  --code-text: #e5e7eb;
-  --code-header: #1e1f2b;
+  --bg-base: #06102a;
+  --bg-surface: #0a1735;
+  --bg-card: rgba(16, 33, 74, 0.82);
+  --bg-card-hover: rgba(22, 44, 96, 0.92);
+  --bg-card-muted: #0b1938;
+  --bg-input: #0b1938;
+  --border-base: #2b4a8f;
+  --border-subtle: #1c3366;
+  --text-main: #f3f6fc;
+  --text-secondary: #c8d2e8;
+  --text-muted: #94a1c0;
+  --accent-main: #fed554;
+  --accent-hover: #f7b92b;
+  --accent-text: #0f2d69;
+  --shadow-neo: 0px 4px 0px #020817;
+  --shadow-neo-sm: 0px 2px 0px #020817;
+  --shadow-neo-lg: 0px 8px 0px #020817;
+  --grid-line: rgba(255, 255, 255, 0.035);
+  --code-bg: #040c22;
+  --code-text: #e6ebf5;
+  --code-header: #0f2d69;
+  --code-meta: #94a1c0;
 }
 
 @layer base {
@@ -151,14 +156,8 @@
 .bg-grid-pattern {
   background-size: 36px 36px;
   background-image:
-    linear-gradient(to right, rgba(25, 26, 35, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(25, 26, 35, 0.05) 1px, transparent 1px);
-}
-
-.dark .bg-grid-pattern {
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
 }
 
 /* Custom Scrollbars */
