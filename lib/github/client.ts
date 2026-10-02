@@ -61,11 +61,11 @@ export async function commitTree(
       if (!(e instanceof GitHubError)) throw e;
       if (e.status === 409 && attempt === 0) {
         // A brand-new empty repository rejects the Git Data API entirely; the Contents API
-        // can create the first commit, after which we rebuild on top of it.
+        // can create the first commit (on the default branch — an empty repo has no other),
+        // after which we rebuild on top of it or start the target branch from scratch.
         await gh(r, 'PUT', '/contents/README.md', {
           message: 'Initialize course export',
           content: Buffer.from('# Course export\n').toString('base64'),
-          branch: r.branch,
         });
         continue;
       }

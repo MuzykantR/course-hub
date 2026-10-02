@@ -22,6 +22,9 @@ Full plan: `C:\Users\rodio\.claude\plans\hazy-orbiting-shannon.md`. UI copy is R
 - Supabase dev project `hse-dev`, ref `zysycnawewufesrarjgo` (eu-central-1). Apply migrations via MCP
   `apply_migration`, then rename the local file to the version from `list_migrations`.
   `supabase/seed.sql` is dev-only (course password `python-dev`).
+- Supabase prod project `hse-prod`, ref `ikwbtmijumqxtiidhgtx` (eu-central-1): same migrations applied (its
+  versions are apply timestamps, SQL identical), settings row created, **never run seed.sql there**.
+  Local GitHub export goes to branch `dev-export-test` of `MuzykantR/python-hse-course`; prod (Vercel) uses `main`.
 
 ## Stack
 
