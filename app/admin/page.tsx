@@ -102,7 +102,7 @@ export default async function AdminHome() {
               t.hot ? 'bg-theme-accent text-theme-accentText' : 'bg-theme-card'
             }`}
           >
-            <span className="block font-mono text-3xl font-bold">{t.value}</span>
+            <span className="block font-display text-3xl font-bold">{t.value}</span>
             <span className="text-sm font-semibold">{t.label}</span>
           </Link>
         ))}

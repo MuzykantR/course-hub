@@ -5,13 +5,13 @@ import { Presentation } from 'lucide-react';
 import { CodeBlock } from '@/components/code/CodeBlock';
 import { PyRunner } from '@/components/code/PyRunner';
 import { MarkdownContent } from '@/components/markdown/MarkdownContent';
-import { Badge, DifficultyBadge, TagLink, VerdictBadge } from '@/components/ui/Badge';
+import { Badge, DifficultyBadge, TagLink, verdictLabel } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { EmptyState, PageHeader, SectionTitle } from '@/components/ui/PageHeader';
 import { requireSession } from '@/lib/auth/guards';
 import { getTask } from '@/lib/db/queries/content';
 import { getPeople } from '@/lib/db/queries/people';
-import { formatDate } from '@/lib/format';
+import { formatDate, formatShortDate } from '@/lib/format';
 import { kbHref } from '@/lib/validation/kb';
 import { parseTaskTests } from '@/lib/python/protocol';
 import { parseIdParam } from '@/lib/validation/params';
@@ -26,9 +26,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 function Stat({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="flex flex-col gap-1">
-      <dt className="text-[10px] font-bold uppercase tracking-widest text-theme-muted">{label}</dt>
-      <dd className="text-sm font-semibold">{value}</dd>
+    <div className="flex flex-col gap-0.5">
+      <dt className="text-sm opacity-70">{label}</dt>
+      <dd className="font-bold">{value}</dd>
     </div>
   );
 }
@@ -43,89 +43,129 @@ export default async function TaskPage({ params }: Props) {
     ? people.studentById.get(task.assigned_student_id)
     : undefined;
 
+  const showBoard = Boolean(assigned || task.verdict);
+
   return (
     <>
       <PageHeader
         back={
           task.lesson
-            ? { href: `/lessons/${task.lesson.id}`, label: `Занятие ${task.lesson.number}` }
+            ? {
+                href: `/lessons/${task.lesson.id}`,
+                label: `Занятие ${task.lesson.number}. ${task.lesson.title}, ${formatDate(task.lesson.date)}`,
+              }
             : undefined
         }
-        eyebrow={task.lesson ? `${task.lesson.title} · ${formatDate(task.lesson.date)}` : 'Задача'}
         title={task.title}
       >
         <div className="flex flex-wrap items-center gap-2">
           <DifficultyBadge difficulty={task.difficulty} />
-          <VerdictBadge verdict={task.verdict} />
           {task.tags.map((tag) => (
             <TagLink key={tag} tag={tag} href={kbHref({}, { tag })} />
           ))}
         </div>
       </PageHeader>
 
-      <Card>
-        <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          <Stat
-            label="У доски"
-            value={
-              assigned ? (
-                <Link href={`/students/${assigned.slug}`} className="hover:underline">
-                  {assigned.name}
-                </Link>
+      <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_19rem]">
+        <div className="flex min-w-0 flex-col gap-8">
+          <section className="flex flex-col gap-4">
+            <SectionTitle>Условие</SectionTitle>
+            <Card size="lg">
+              {task.statement_md.trim() ? (
+                <MarkdownContent source={task.statement_md} />
               ) : (
-                '—'
-              )
-            }
-          />
-          <Stat label="Вердикт" value={<VerdictBadge verdict={task.verdict} />} />
-          <Stat label="Время" value={task.runtime_ms != null ? `${task.runtime_ms} мс` : '—'} />
-          <Stat label="Память" value={task.memory_mb != null ? `${task.memory_mb} МБ` : '—'} />
-        </dl>
-      </Card>
+                <p className="text-theme-muted">Условие ещё не добавлено.</p>
+              )}
+            </Card>
+          </section>
 
-      <section className="flex flex-col gap-4">
-        <SectionTitle>Условие</SectionTitle>
-        <Card size="lg">
-          {task.statement_md.trim() ? (
-            <MarkdownContent source={task.statement_md} />
-          ) : (
-            <p className="text-theme-muted">Условие ещё не добавлено.</p>
-          )}
-        </Card>
-      </section>
-
-      <section className="flex flex-col gap-4">
-        <SectionTitle>Попробовать</SectionTitle>
-        <PyRunner
-          tests={parseTaskTests(task.tests)}
-          samples={task.solutions.map((s) => ({
-            label: people.studentById.get(s.author_student_id)?.name ?? 'Решение',
-            code: s.code,
-          }))}
-        />
-      </section>
-
-      <section className="flex flex-col gap-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <SectionTitle count={task.solutions.length}>Решения</SectionTitle>
-          {session.role === 'student' && (
-            <Link
-              href={`/submit/solution?task=${task.id}`}
-              className="inline-flex items-center gap-2 rounded-pill border-2 border-theme-border bg-theme-accent px-4 py-2 text-sm font-bold text-theme-accentText shadow-neo-sm transition hover:-translate-y-0.5"
-            >
-              + Предложить решение
-            </Link>
-          )}
+          <section className="flex flex-col gap-4">
+            <SectionTitle>Попробовать</SectionTitle>
+            <PyRunner
+              tests={parseTaskTests(task.tests)}
+              samples={task.solutions.map((s) => ({
+                label: people.studentById.get(s.author_student_id)?.name ?? 'Решение',
+                code: s.code,
+              }))}
+            />
+          </section>
         </div>
-        {task.solutions.length === 0 ? (
-          <EmptyState>Решений пока нет.</EmptyState>
-        ) : (
-          task.solutions.map((s) => {
+
+        <aside className="flex flex-col gap-6 lg:sticky lg:top-6">
+          {showBoard && (
+            <section className="flex flex-col gap-3 rounded-card border-2 border-theme-border bg-theme-accent p-5 text-theme-accentText shadow-neo">
+              <h2 className="text-lg font-bold">Разобрано у доски</h2>
+              <dl className="grid grid-cols-2 gap-3">
+                <Stat
+                  label="Решал"
+                  value={
+                    assigned ? (
+                      <Link href={`/students/${assigned.slug}`} className="hover:underline">
+                        {assigned.name}
+                      </Link>
+                    ) : (
+                      '—'
+                    )
+                  }
+                />
+                <Stat label="Вердикт" value={verdictLabel(task.verdict)} />
+                <Stat
+                  label="Время"
+                  value={task.runtime_ms != null ? `${task.runtime_ms} мс` : '—'}
+                />
+                <Stat
+                  label="Память"
+                  value={task.memory_mb != null ? `${task.memory_mb} МБ` : '—'}
+                />
+              </dl>
+            </section>
+          )}
+
+          <section className="flex flex-col gap-3">
+            <SectionTitle count={task.solutions.length}>Решения</SectionTitle>
+            {task.solutions.length === 0 ? (
+              <EmptyState>Решений пока нет.</EmptyState>
+            ) : (
+              <ul className="flex flex-col divide-y-2 divide-theme-cardMuted overflow-hidden rounded-card border-2 border-theme-border bg-theme-card shadow-neo backdrop-blur">
+                {task.solutions.map((s) => (
+                  <li key={s.id}>
+                    <a
+                      href={`#solution-${s.id}`}
+                      className="flex items-baseline justify-between gap-3 px-4 py-3 hover:bg-theme-cardMuted"
+                    >
+                      <span className="font-semibold">
+                        {people.studentById.get(s.author_student_id)?.name ?? 'Автор удалён'}
+                      </span>
+                      <span className="shrink-0 text-xs text-theme-muted">
+                        {formatShortDate(s.created_at)}
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {session.role === 'student' && (
+              <Link
+                href={`/submit/solution?task=${task.id}`}
+                className="inline-flex h-11 items-center justify-center rounded-pill border-2 border-theme-border bg-theme-card px-5 text-sm font-bold shadow-neo-sm transition hover:-translate-y-0.5"
+              >
+                Предложить своё решение
+              </Link>
+            )}
+          </section>
+        </aside>
+      </div>
+
+      {task.solutions.length > 0 && (
+        <section className="flex flex-col gap-4">
+          <SectionTitle>Код решений</SectionTitle>
+          {task.solutions.map((s) => {
             const author = people.studentById.get(s.author_student_id);
             return (
               <article
                 key={s.id}
-                className="flex flex-col gap-3 rounded-card border-2 border-theme-border bg-theme-card p-5 shadow-neo backdrop-blur"
+                id={`solution-${s.id}`}
+                className="flex scroll-mt-6 flex-col gap-3 rounded-card border-2 border-theme-border bg-theme-card p-5 shadow-neo backdrop-blur"
               >
                 <div className="flex flex-wrap items-center gap-2">
                   {author ? (
@@ -148,9 +188,9 @@ export default async function TaskPage({ params }: Props) {
                 {s.explanation_md && <MarkdownContent source={s.explanation_md} />}
               </article>
             );
-          })
-        )}
-      </section>
+          })}
+        </section>
+      )}
     </>
   );
 }

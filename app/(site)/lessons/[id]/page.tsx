@@ -46,7 +46,7 @@ export default async function LessonPage({ params }: Props) {
         </Card>
       )}
 
-      <section className="flex flex-col gap-4">
+      <section id="tasks" className="flex scroll-mt-6 flex-col gap-4">
         <SectionTitle count={lesson.tasks.length}>Задачи</SectionTitle>
         {lesson.tasks.length === 0 ? (
           <EmptyState>Задачи этого занятия ещё не опубликованы.</EmptyState>
@@ -94,7 +94,7 @@ export default async function LessonPage({ params }: Props) {
       </section>
 
       {lesson.reports.length > 0 && (
-        <section className="flex flex-col gap-4">
+        <section id="reports" className="flex scroll-mt-6 flex-col gap-4">
           <SectionTitle count={lesson.reports.length}>Доклады</SectionTitle>
           <ul className="grid gap-3 md:grid-cols-2">
             {lesson.reports.map((r) => (

@@ -24,7 +24,7 @@ export function PageHeader({
         </Link>
       )}
       {eyebrow && (
-        <p className="text-xs font-bold uppercase tracking-widest text-theme-muted">{eyebrow}</p>
+        <p className="text-sm font-semibold text-theme-muted">{eyebrow}</p>
       )}
       <h1 className="text-3xl font-bold tracking-tight md:text-4xl">{title}</h1>
       {children}

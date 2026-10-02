@@ -2,7 +2,8 @@ import 'server-only';
 import { createHighlighter, type Highlighter } from 'shiki';
 import { createJavaScriptRegexEngine } from 'shiki/engine/javascript';
 
-const THEME = 'github-dark';
+// Both themes are emitted; `.dark .shiki-dual span` in globals.css swaps in the dark colors.
+const THEMES = { light: 'github-light-default', dark: 'github-dark-default' } as const;
 
 const LANGS = [
   'python',
@@ -39,7 +40,7 @@ let highlighter: Promise<Highlighter> | undefined;
 function getHighlighter() {
   // JS regex engine: no WASM to ship in the serverless bundle.
   highlighter ??= createHighlighter({
-    themes: [THEME],
+    themes: [THEMES.light, THEMES.dark],
     langs: [...LANGS],
     engine: createJavaScriptRegexEngine(),
   });
@@ -55,7 +56,11 @@ export function normalizeLang(lang: string | undefined): string {
 /** Highlighted hast for the <code> contents (one span per line). The <pre> wrapper is ours. */
 export async function highlightToHast(code: string, lang: string) {
   const hl = await getHighlighter();
-  const root = hl.codeToHast(code.replace(/\n$/, ''), { lang: normalizeLang(lang), theme: THEME });
+  const root = hl.codeToHast(code.replace(/\n$/, ''), {
+    lang: normalizeLang(lang),
+    themes: THEMES,
+    defaultColor: 'light',
+  });
   const pre = root.children[0];
   const codeEl = pre?.type === 'element' ? pre.children[0] : undefined;
   if (!codeEl || codeEl.type !== 'element') throw new Error('unexpected shiki output');

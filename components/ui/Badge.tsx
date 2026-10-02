@@ -3,24 +3,43 @@ import { cn } from '@/lib/cn';
 
 type Tone = 'neutral' | 'accent' | 'green' | 'red' | 'amber' | 'blue';
 
-const tones: Record<Tone, string> = {
-  neutral: 'bg-theme-card text-theme-main',
-  accent: 'bg-theme-accent text-theme-accentText',
-  green: 'bg-emerald-200 text-emerald-950 dark:bg-emerald-900 dark:text-emerald-100',
-  red: 'bg-rose-200 text-rose-950 dark:bg-rose-950 dark:text-rose-100',
-  amber: 'bg-amber-200 text-amber-950 dark:bg-amber-900 dark:text-amber-100',
-  blue: 'bg-sky-200 text-sky-950 dark:bg-sky-900 dark:text-sky-100',
+// Status reads from a small colored dot on a neutral pill; only `accent` fills with lime.
+const DOTS: Partial<Record<Tone, string>> = {
+  green: 'bg-emerald-500',
+  red: 'bg-rose-500',
+  amber: 'bg-amber-400',
+  blue: 'bg-sky-500',
 };
 
 const base =
-  'inline-flex items-center gap-1 whitespace-nowrap rounded-pill border-2 border-theme-border px-2.5 py-0.5 text-xs font-bold';
+  'inline-flex items-center gap-1.5 whitespace-nowrap rounded-pill border-2 border-theme-border px-2.5 py-0.5 text-xs font-bold';
+
+export function StatusDot({ tone }: { tone: Tone }) {
+  const dot = DOTS[tone];
+  return dot ? <span aria-hidden className={cn('h-2 w-2 shrink-0 rounded-full', dot)} /> : null;
+}
 
 export function Badge({
   tone = 'neutral',
   className,
+  children,
   ...props
 }: React.HTMLAttributes<HTMLSpanElement> & { tone?: Tone }) {
-  return <span className={cn(base, tones[tone], className)} {...props} />;
+  return (
+    <span
+      className={cn(
+        base,
+        tone === 'accent'
+          ? 'bg-theme-accent text-theme-accentText'
+          : 'bg-theme-card text-theme-main',
+        className,
+      )}
+      {...props}
+    >
+      <StatusDot tone={tone} />
+      {children}
+    </span>
+  );
 }
 
 export function TagLink({ tag, href }: { tag: string; href: string }) {
@@ -29,7 +48,7 @@ export function TagLink({ tag, href }: { tag: string; href: string }) {
       href={href}
       className={cn(
         base,
-        'border-theme-border/40 bg-theme-cardMuted font-mono font-semibold hover:border-theme-border',
+        'border-transparent bg-theme-cardMuted font-mono font-semibold hover:border-theme-border',
       )}
     >
       #{tag}
@@ -44,6 +63,10 @@ const VERDICTS: Record<string, { label: string; tone: Tone }> = {
   runtime_error: { label: 'Runtime Error', tone: 'red' },
   not_checked: { label: 'Не проверено', tone: 'neutral' },
 };
+
+export function verdictLabel(verdict: string | null): string {
+  return (VERDICTS[verdict ?? 'not_checked'] ?? VERDICTS.not_checked!).label;
+}
 
 export function VerdictBadge({ verdict }: { verdict: string | null }) {
   const v = VERDICTS[verdict ?? 'not_checked'] ?? VERDICTS.not_checked!;
@@ -62,5 +85,5 @@ export function DifficultyBadge({ difficulty }: { difficulty: string | null }) {
 }
 
 export function TypeBadge({ type }: { type: 'task' | 'report' }) {
-  return type === 'task' ? <Badge tone="blue">Задача</Badge> : <Badge tone="accent">Доклад</Badge>;
+  return type === 'task' ? <Badge>Задача</Badge> : <Badge tone="accent">Доклад</Badge>;
 }

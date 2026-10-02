@@ -13,7 +13,13 @@ const LINKS = [
 export function NavLinks({ className }: { className?: string }) {
   const pathname = usePathname();
   return (
-    <nav aria-label="Разделы" className={cn('flex gap-2', className)}>
+    <nav
+      aria-label="Разделы"
+      className={cn(
+        'flex w-fit gap-1 rounded-pill border-2 border-theme-border bg-theme-card p-1 backdrop-blur',
+        className,
+      )}
+    >
       {LINKS.map(({ href, label, match }) => {
         const active = match.some((m) => pathname === m || pathname.startsWith(`${m}/`));
         return (
@@ -22,10 +28,10 @@ export function NavLinks({ className }: { className?: string }) {
             href={href}
             aria-current={active ? 'page' : undefined}
             className={cn(
-              'whitespace-nowrap rounded-pill border-2 px-4 py-2 text-sm font-bold transition',
+              'whitespace-nowrap rounded-pill px-4 py-1.5 text-sm transition',
               active
-                ? 'border-theme-border bg-theme-accent text-theme-accentText shadow-neo-sm'
-                : 'border-transparent hover:border-theme-border hover:bg-theme-card',
+                ? 'bg-theme-accent font-bold text-theme-accentText'
+                : 'font-semibold hover:bg-theme-cardMuted',
             )}
           >
             {label}

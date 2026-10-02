@@ -3,49 +3,56 @@
 @tailwind utilities;
 
 :root {
-  --bg-base: #fafafb;
-  --bg-surface: #f4f5f7;
-  --bg-card: rgba(255, 255, 255, 0.88);
+  /* Ink + paper + one acid lime. Violet/cyan live only in the ambient gradient. */
+  --bg-base: #f4f5f7;
+  --bg-surface: #eceef2;
+  --bg-card: rgba(255, 255, 255, 0.86);
   --bg-card-hover: #ffffff;
-  --bg-card-muted: #ebecef;
+  --bg-card-muted: #ecedf1;
   --bg-input: #ffffff;
-  --border-base: #191a23;
-  --border-subtle: #d1d5db;
-  --text-main: #191a23;
-  --text-secondary: #374151;
-  --text-muted: #6b7280;
+  --border-base: #15161d;
+  --border-subtle: #d9dbe1;
+  --text-main: #15161d;
+  --text-secondary: #474b57;
+  --text-muted: #6a6e7a;
   --accent-main: #b9ff66;
   --accent-hover: #a8f550;
-  --accent-text: #191a23;
-  --shadow-neo: 0px 4px 0px #191a23;
-  --shadow-neo-sm: 0px 2px 0px #191a23;
-  --shadow-neo-lg: 0px 8px 0px #191a23;
-  --code-bg: #191a23;
-  --code-text: #f3f4f6;
-  --code-header: #23242e;
+  --accent-text: #15161d;
+  --shadow-neo: 4px 4px 0px #15161d;
+  --shadow-neo-sm: 2px 2px 0px #15161d;
+  --shadow-neo-lg: 6px 6px 0px #15161d;
+  --grid-line: rgba(21, 22, 29, 0.045);
+  --code-bg: #fafbfc;
+  --code-text: #1f2328;
+  --code-header: #f1f2f5;
+  --code-rule: #e3e5ea;
+  --code-meta: #6e7781;
 }
 
 .dark {
-  --bg-base: #0b0c10;
-  --bg-surface: #14151f;
-  --bg-card: rgba(30, 31, 43, 0.85);
-  --bg-card-hover: rgba(37, 38, 54, 0.95);
-  --bg-card-muted: #13141d;
-  --bg-input: #13141d;
-  --border-base: #2d2e3f;
-  --border-subtle: #252636;
-  --text-main: #f9fafb;
-  --text-secondary: #d1d5db;
-  --text-muted: #9ca3af;
+  --bg-base: #0e0f14;
+  --bg-surface: #14151b;
+  --bg-card: rgba(24, 26, 34, 0.82);
+  --bg-card-hover: rgba(30, 32, 42, 0.95);
+  --bg-card-muted: #252833;
+  --bg-input: #12131a;
+  --border-base: #2e313d;
+  --border-subtle: #252833;
+  --text-main: #f2f3f7;
+  --text-secondary: #b8bcc8;
+  --text-muted: #8b90a0;
   --accent-main: #b9ff66;
   --accent-hover: #a8f550;
-  --accent-text: #191a23;
-  --shadow-neo: 0px 4px 0px #000000;
-  --shadow-neo-sm: 0px 2px 0px #000000;
-  --shadow-neo-lg: 0px 8px 0px #000000;
-  --code-bg: #13141d;
-  --code-text: #e5e7eb;
-  --code-header: #1e1f2b;
+  --accent-text: #15161d;
+  --shadow-neo: 4px 4px 0px #000000;
+  --shadow-neo-sm: 2px 2px 0px #000000;
+  --shadow-neo-lg: 6px 6px 0px #000000;
+  --grid-line: rgba(255, 255, 255, 0.035);
+  --code-bg: #111218;
+  --code-text: #e6e8ee;
+  --code-header: #181a22;
+  --code-rule: #2e313d;
+  --code-meta: #8b90a0;
 }
 
 @layer base {
@@ -57,11 +64,22 @@
   body {
     background-color: var(--bg-base);
     color: var(--text-main);
-    font-family: var(--font-sans), 'Space Grotesk', system-ui, sans-serif;
+    font-family: var(--font-sans), system-ui, sans-serif;
     transition:
       background-color 0.3s ease,
       color 0.3s ease;
     overflow-x: hidden;
+  }
+
+  h1,
+  h2 {
+    font-family: var(--font-display), var(--font-sans), sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  /* Shiki emits both themes; the dark one lives in --shiki-dark on each token. */
+  .dark .shiki-dual span {
+    color: var(--shiki-dark) !important;
   }
 
   code,
@@ -151,14 +169,8 @@
 .bg-grid-pattern {
   background-size: 36px 36px;
   background-image:
-    linear-gradient(to right, rgba(25, 26, 35, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(25, 26, 35, 0.05) 1px, transparent 1px);
-}
-
-.dark .bg-grid-pattern {
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
 }
 
 /* Custom Scrollbars */
@@ -186,4 +198,13 @@
   overflow-x: auto;
   overflow-y: hidden;
   padding: 0.5rem 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float-slow,
+  .animate-float-reverse,
+  .animate-float-gentle,
+  .animate-pulse-glow {
+    animation: none;
+  }
 }

@@ -26,13 +26,13 @@ export async function CodeBlock({
         className,
       )}
     >
-      <div className="flex items-center justify-between gap-3 border-b border-white/10 bg-[var(--code-header)] px-4 py-2">
-        <span className="font-mono text-xs font-bold uppercase tracking-wider text-theme-accent">
+      <div className="flex items-center justify-between gap-3 border-b-2 border-[var(--code-rule)] bg-[var(--code-header)] px-4 py-2">
+        <span className="rounded-md bg-theme-accent px-2 font-mono text-xs font-semibold text-theme-accentText">
           {language === 'text' ? (lang ?? 'code') : language}
         </span>
-        {title && <span className="truncate font-mono text-xs text-slate-400">{title}</span>}
+        {title && <span className="truncate font-mono text-xs text-[var(--code-meta)]">{title}</span>}
       </div>
-      <pre className="overflow-x-auto p-4 text-[13px] leading-relaxed text-[var(--code-text)]">
+      <pre className="shiki-dual overflow-x-auto p-4 text-[13px] leading-relaxed text-[var(--code-text)]">
         {body}
       </pre>
     </div>

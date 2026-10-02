@@ -16,7 +16,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   }
 
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-10 px-4 py-6 md:py-10">
+    <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-6 md:py-10">
       <Header session={session} studentName={studentName} />
       <main className="flex flex-col gap-10">{children}</main>
     </div>
