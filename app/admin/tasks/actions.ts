@@ -20,8 +20,6 @@ export async function saveTask(_prev: FormState, fd: FormData): Promise<FormStat
   const task = {
     ...d,
     assigned_student_id: d.assigned_student_id ?? null,
-    runtime_ms: d.runtime_ms ?? null,
-    memory_mb: d.memory_mb ?? null,
   };
   const existingId = idSchema.safeParse(fd.get('id'));
 
@@ -41,7 +39,7 @@ export async function saveTask(_prev: FormState, fd: FormData): Promise<FormStat
     action: existingId.success ? 'task.update' : 'task.create',
     entity: 'task',
     entityId: id,
-    meta: { status: task.status, verdict: task.verdict },
+    meta: { status: task.status },
   });
   scheduleExport('задача');
   revalidatePath('/admin/tasks');

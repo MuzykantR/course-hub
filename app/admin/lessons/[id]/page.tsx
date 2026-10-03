@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 import { ExternalLink } from 'lucide-react';
 import { ConfirmForm } from '@/components/admin/FormBits';
 import { AdminPageTitle, AdminTable, StatusPill } from '@/components/admin/Table';
-import { VerdictBadge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/PageHeader';
 import { requireTeacher } from '@/lib/auth/guards';
@@ -65,7 +64,7 @@ export default async function EditLessonPage({
         {lesson.tasks.length === 0 ? (
           <EmptyState>Задач пока нет.</EmptyState>
         ) : (
-          <AdminTable head={['#', 'Задача', 'Статус', 'Вердикт', 'У доски']}>
+          <AdminTable head={['#', 'Задача', 'Статус', 'Решал на паре']}>
             {lesson.tasks.map((t) => (
               <tr key={t.id}>
                 <td className="font-mono">{t.order}</td>
@@ -76,9 +75,6 @@ export default async function EditLessonPage({
                 </td>
                 <td>
                   <StatusPill status={t.status} />
-                </td>
-                <td>
-                  <VerdictBadge verdict={t.verdict} />
                 </td>
                 <td>
                   {t.assigned_student_id

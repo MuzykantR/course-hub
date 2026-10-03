@@ -29,9 +29,6 @@ export type ExportInput = {
     statement_md: string;
     difficulty: string;
     tags: string[];
-    verdict: string;
-    runtime_ms: number | null;
-    memory_mb: number | null;
     assigned_student_id: number | null;
   }[];
   solutions: {
@@ -59,13 +56,6 @@ export type ExportInput = {
 export type ExportFile = { path: string; content: string } | { path: string; base64: string };
 
 const DIFFICULTY: Record<string, string> = { easy: 'лёгкая', medium: 'средняя', hard: 'сложная' };
-const VERDICT: Record<string, string> = {
-  accepted: 'Accepted',
-  wrong_answer: 'Wrong Answer',
-  tle: 'Time Limit Exceeded',
-  runtime_error: 'Runtime Error',
-  not_checked: 'не проверено',
-};
 
 const pad = (n: number) => String(n).padStart(2, '0');
 const cell = (s: string) => s.replace(/\|/g, '\\|').replace(/\n/g, ' ');
@@ -130,8 +120,8 @@ export function buildExportFiles(input: ExportInput): ExportFile[] {
         '',
         '## Задачи',
         '',
-        '| № | Задача | Сложность | У доски | Вердикт | Решения |',
-        '|---|---|---|---|---|---|',
+        '| № | Задача | Сложность | Решал на паре | Решения |',
+        '|---|---|---|---|---|',
       );
       for (const t of tasks) {
         const base = taskFileBase(t);
@@ -140,7 +130,7 @@ export function buildExportFiles(input: ExportInput): ExportFile[] {
           ? (student.get(t.assigned_student_id)?.name ?? '—')
           : '—';
         readme.push(
-          `| ${t.order} | [${cell(t.title)}](tasks/${base}.md) | ${DIFFICULTY[t.difficulty] ?? t.difficulty} | ${cell(assigned)} | ${VERDICT[t.verdict] ?? t.verdict} | ${sols.length ? `[${sols.length}](solutions/${base}/)` : '—'} |`,
+          `| ${t.order} | [${cell(t.title)}](tasks/${base}.md) | ${DIFFICULTY[t.difficulty] ?? t.difficulty} | ${cell(assigned)} | ${sols.length ? `[${sols.length}](solutions/${base}/)` : '—'} |`,
         );
 
         const meta = [
@@ -148,12 +138,8 @@ export function buildExportFiles(input: ExportInput): ExportFile[] {
           '',
           `- **Занятие:** ${lesson.number}. ${lesson.title} (${lesson.date})`,
           `- **Сложность:** ${DIFFICULTY[t.difficulty] ?? t.difficulty}`,
-          `- **У доски:** ${assigned}`,
-          `- **Вердикт:** ${VERDICT[t.verdict] ?? t.verdict}`,
+          `- **Решал на паре:** ${assigned}`,
         ];
-        if (t.runtime_ms != null) meta.push(`- **Время:** ${t.runtime_ms} мс`);
-        if (t.memory_mb != null) meta.push(`- **Память:** ${t.memory_mb} МБ`);
-        if (t.tags.length) meta.push(`- **Теги:** ${t.tags.map((x) => `\`${x}\``).join(', ')}`);
         meta.push('', '## Условие', '', t.statement_md.trim() || '_Условие не добавлено._', '');
         files.push({ path: `${dir}/tasks/${base}.md`, content: meta.join('\n') });
 
@@ -165,7 +151,7 @@ export function buildExportFiles(input: ExportInput): ExportFile[] {
           const header = [
             `# Задача: ${comment(t.title)}`,
             `# Автор: ${comment(author?.name ?? 'неизвестен')}`,
-            ...(s.is_featured ? ['# Разобрано у доски'] : []),
+            ...(s.is_featured ? ['# Разобрано на паре'] : []),
             '',
           ].join('\n');
           files.push({
@@ -185,7 +171,7 @@ export function buildExportFiles(input: ExportInput): ExportFile[] {
     if (reports.length) {
       readme.push('', '## Доклады', '');
       for (const r of reports) {
-        readme.push(`- [${r.title}](reports/${r.slug}/) — ${r.library}, ${names(r.authorIds)}`);
+        readme.push(`- [${r.title}](reports/${r.slug}/) — ${[r.library, names(r.authorIds)].filter(Boolean).join(', ')}`);
       }
     }
     files.push({ path: `${dir}/README.md`, content: `${readme.join('\n')}\n` });
@@ -199,11 +185,10 @@ export function buildExportFiles(input: ExportInput): ExportFile[] {
     const head = [
       `# ${r.title}`,
       '',
-      `- **Библиотека:** ${r.library}`,
+      ...(r.library ? [`- **Библиотека:** ${r.library}`] : []),
       `- **Авторы:** ${names(r.authorIds) || '—'}`,
       `- **Группа:** ${group.get(r.group_id)?.name ?? '—'}`,
     ];
-    if (r.tags.length) head.push(`- **Теги:** ${r.tags.map((x) => `\`${x}\``).join(', ')}`);
     if (r.summary.trim()) head.push('', `> ${r.summary.trim()}`);
     files.push({
       path: `${dir}/README.md`,
@@ -230,7 +215,7 @@ export function buildExportFiles(input: ExportInput): ExportFile[] {
   if (loose.length) {
     root.push('', '## Доклады вне занятий', '');
     for (const r of loose)
-      root.push(`- [${r.title}](reports/${r.slug}/) — ${r.library}, ${names(r.authorIds)}`);
+      root.push(`- [${r.title}](reports/${r.slug}/) — ${[r.library, names(r.authorIds)].filter(Boolean).join(', ')}`);
   }
   files.push({ path: 'README.md', content: `${root.join('\n')}\n` });
 

@@ -71,11 +71,10 @@ export function ReportForm({
               defaultValue={valueOf(state, 'title', report.title)}
             />
           </Field>
-          <Field label="Библиотека" htmlFor="library" error={fe.library}>
+          <Field label="Библиотека (необязательно)" htmlFor="library" error={fe.library}>
             <Input
               id="library"
               name="library"
-              required
               maxLength={100}
               defaultValue={valueOf(state, 'library', report.library)}
             />
@@ -162,14 +161,13 @@ export function ReportForm({
           </div>
         </Field>
 
+        {/* Tags are hidden from the UI for now; the hidden field keeps existing values. */}
+        <input
+          type="hidden"
+          name="tags"
+          defaultValue={valueOf(state, 'tags', report.tags.join(', ')) ?? ''}
+        />
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Теги" htmlFor="tags" error={fe.tags} hint="Через запятую.">
-            <Input
-              id="tags"
-              name="tags"
-              defaultValue={valueOf(state, 'tags', report.tags.join(', '))}
-            />
-          </Field>
           <Field
             label="Адрес (slug)"
             htmlFor="slug"

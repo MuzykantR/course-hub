@@ -16,7 +16,7 @@ async function loadExportInput(): Promise<ExportInput> {
     db()
       .from('tasks')
       .select(
-        'id, lesson_id, order, title, statement_md, difficulty, tags, verdict, runtime_ms, memory_mb, assigned_student_id',
+        'id, lesson_id, order, title, statement_md, difficulty, tags, assigned_student_id',
       )
       .neq('status', 'draft'),
     db()

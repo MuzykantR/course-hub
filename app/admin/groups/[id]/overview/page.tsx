@@ -11,13 +11,7 @@ import { parseIdParam } from '@/lib/validation/params';
 
 export const metadata: Metadata = { title: 'Обзор группы' };
 
-const VERDICT_MARK: Record<string, { mark: string; cls: string; title: string }> = {
-  accepted: { mark: '✓', cls: 'bg-emerald-300 text-emerald-950', title: 'У доски: Accepted' },
-  wrong_answer: { mark: '✗', cls: 'bg-rose-300 text-rose-950', title: 'У доски: Wrong Answer' },
-  tle: { mark: '⏱', cls: 'bg-amber-300 text-amber-950', title: 'У доски: Time Limit' },
-  runtime_error: { mark: '!', cls: 'bg-rose-300 text-rose-950', title: 'У доски: Runtime Error' },
-  not_checked: { mark: '•', cls: 'bg-sky-300 text-sky-950', title: 'У доски: не проверено' },
-};
+const PRESENTED = 'inline-flex items-center justify-center rounded bg-theme-accent font-bold text-theme-accentText';
 
 export default async function GroupOverviewPage({ params }: { params: Promise<{ id: string }> }) {
   await requireTeacher();
@@ -55,19 +49,10 @@ export default async function GroupOverviewPage({ params }: { params: Promise<{ 
       </AdminPageTitle>
 
       <div className="flex flex-wrap gap-3 text-xs text-theme-secondary">
-        {Object.values(VERDICT_MARK).map((v) => (
-          <span key={v.mark} className="inline-flex items-center gap-1">
-            <span
-              className={cn(
-                'inline-flex h-5 w-5 items-center justify-center rounded font-bold',
-                v.cls,
-              )}
-            >
-              {v.mark}
-            </span>
-            {v.title}
-          </span>
-        ))}
+        <span className="inline-flex items-center gap-1">
+          <span className={cn('h-5 w-5', PRESENTED)}>★</span>
+          решал на паре
+        </span>
         <span className="inline-flex items-center gap-1">
           <span className="inline-flex h-5 w-5 items-center justify-center rounded border-2 border-theme-border font-bold">
             Р
@@ -115,21 +100,14 @@ export default async function GroupOverviewPage({ params }: { params: Promise<{ 
                     </Link>
                   </td>
                   {tasks.map((t) => {
-                    const verdict =
-                      t.assigned_student_id === s.id ? VERDICT_MARK[t.verdict] : undefined;
+                    const presented = t.assigned_student_id === s.id;
                     const sol = solutionStatus.get(solutionKey(t.id, s.id));
                     return (
                       <td key={t.id} className="px-1 py-1.5 text-center">
                         <span className="inline-flex gap-0.5">
-                          {verdict && (
-                            <span
-                              title={verdict.title}
-                              className={cn(
-                                'inline-flex h-6 w-6 items-center justify-center rounded font-bold',
-                                verdict.cls,
-                              )}
-                            >
-                              {verdict.mark}
+                          {presented && (
+                            <span title="Решал на паре" className={cn('h-6 w-6', PRESENTED)}>
+                              ★
                             </span>
                           )}
                           {sol && (

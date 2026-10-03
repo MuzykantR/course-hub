@@ -28,9 +28,6 @@ const input: ExportInput = {
       statement_md: 'Найдите пару',
       difficulty: 'easy',
       tags: ['arrays'],
-      verdict: 'accepted',
-      runtime_ms: 48,
-      memory_mb: 17.2,
       assigned_student_id: 10,
     },
   ],
@@ -105,7 +102,7 @@ describe('buildExportFiles', () => {
 
   it('writes solution files with a readable header and trimmed code', () => {
     expect(text('2026-09-05_spiski-i-dva-ukazatelya/solutions/01-dva-chisla/anna-ivanova.py')).toBe(
-      '# Задача: Два числа\n# Автор: Анна Иванова\n# Разобрано у доски\n\nprint(1)\n',
+      '# Задача: Два числа\n# Автор: Анна Иванова\n# Разобрано на паре\n\nprint(1)\n',
     );
   });
 
@@ -128,10 +125,19 @@ describe('buildExportFiles', () => {
     expect(root).toContain('[requests](reports/requests-http/)');
   });
 
-  it('describes the task with its verdict and metrics', () => {
+  it('names who solved the task at the seminar, without tags', () => {
     const task = text('2026-09-05_spiski-i-dva-ukazatelya/tasks/01-dva-chisla.md');
-    expect(task).toContain('**Вердикт:** Accepted');
-    expect(task).toContain('**У доски:** Анна Иванова');
-    expect(task).toContain('**Память:** 17.2 МБ');
+    expect(task).toContain('**Решал на паре:** Анна Иванова');
+    expect(task).not.toContain('Теги');
+    expect(task).not.toContain('Вердикт');
+  });
+
+  it('omits an empty library from a report', () => {
+    const files = buildExportFiles({
+      ...input,
+      reports: input.reports.map((r) => ({ ...r, library: '' })),
+    });
+    const report = files.find((f) => f.path.endsWith('requests-http/README.md'));
+    expect(report && 'content' in report ? report.content : '').not.toContain('Библиотека');
   });
 });

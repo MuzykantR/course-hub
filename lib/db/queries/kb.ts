@@ -15,10 +15,9 @@ export type KbItem = {
   studentIds: number[];
   tags: string[];
   difficulty: string | null;
-  verdict: string | null;
 };
 
-const COLUMNS = 'type, id, slug, title, date, group_ids, student_ids, tags, difficulty, verdict';
+const COLUMNS = 'type, id, slug, title, date, group_ids, student_ids, tags, difficulty';
 
 type Row = {
   type: string | null;
@@ -30,7 +29,6 @@ type Row = {
   student_ids: number[] | null;
   tags: string[] | null;
   difficulty: string | null;
-  verdict: string | null;
 };
 
 export function toKbItem(r: Row): KbItem {
@@ -45,7 +43,6 @@ export function toKbItem(r: Row): KbItem {
     studentIds: r.student_ids ?? [],
     tags: r.tags ?? [],
     difficulty: r.difficulty,
-    verdict: r.verdict,
   };
 }
 

@@ -83,7 +83,7 @@ test.describe.serial('submission → moderation → publication', () => {
 
     // Approve the first (oldest) one, marking it as solved at the board.
     const first = items.first();
-    await first.getByLabel('Разобрано у доски').check();
+    await first.getByLabel('Разобрано на паре').check();
     await first.getByRole('button', { name: 'Одобрить' }).click();
     await expect(items).toHaveCount(2);
 
@@ -100,7 +100,7 @@ test.describe.serial('submission → moderation → publication', () => {
   test('the approved solution is public and the student sees the teacher comment', async () => {
     await student.goto(`/tasks/${task}`);
     const solution = student.locator('article', { hasText: E2E.studentA });
-    await expect(solution).toContainText('Разобрано у доски');
+    await expect(solution).toContainText('Разобрано на паре');
     await expect(solution).toContainText('return a + b');
 
     await student.goto('/me');

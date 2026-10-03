@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { GroupLinks, StudentLinks } from '@/components/kb/People';
 import { Markdown } from '@/components/markdown/Markdown';
-import { TagLink } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { requireSession } from '@/lib/auth/guards';
@@ -57,7 +56,7 @@ export default async function ReportPage({ params }: Props) {
     <>
       <PageHeader
         back={{ href: kbHref({}, { type: 'report' }), label: 'Все доклады' }}
-        eyebrow={report.library}
+        eyebrow={report.library || undefined}
         title={report.title}
       >
         {report.summary && <p className="max-w-3xl text-theme-secondary">{report.summary}</p>}
@@ -82,13 +81,6 @@ export default async function ReportPage({ params }: Props) {
             {formatDate(report.lesson?.date ?? report.created_at)}
           </span>
         </div>
-        {report.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
-            {report.tags.map((tag) => (
-              <TagLink key={tag} tag={tag} href={kbHref({}, { tag })} />
-            ))}
-          </div>
-        )}
       </PageHeader>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_16rem]">

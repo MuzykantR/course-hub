@@ -54,13 +54,6 @@ export const tagsField = z
 
 export const DIFFICULTIES = ['easy', 'medium', 'hard'] as const;
 export const TASK_STATUSES = ['draft', 'assigned', 'solved'] as const;
-export const VERDICTS = [
-  'not_checked',
-  'accepted',
-  'wrong_answer',
-  'tle',
-  'runtime_error',
-] as const;
 export const REVIEW_STATUSES = ['pending', 'approved', 'rejected'] as const;
 
 export const lessonSchema = z.object({
@@ -110,20 +103,6 @@ export const taskSchema = z.object({
   tags: tagsField,
   assigned_student_id: optionalId,
   status: z.enum(TASK_STATUSES),
-  verdict: z.enum(VERDICTS),
-  runtime_ms: z.preprocess(
-    empty,
-    z.coerce
-      .number('Число')
-      .int('Целое число мс')
-      .min(0, 'Не меньше 0')
-      .max(1_000_000, 'Слишком много')
-      .optional(),
-  ),
-  memory_mb: z.preprocess(
-    empty,
-    z.coerce.number('Число').min(0, 'Не меньше 0').max(100_000, 'Слишком много').optional(),
-  ),
   tests: testsField,
 });
 
@@ -144,7 +123,7 @@ export const solutionSchema = z.object({
 export const reportSchema = z.object({
   title: text(200, 'Название'),
   slug,
-  library: text(100, 'Библиотека'),
+  library: z.string().trim().max(100, 'Библиотека: до 100 символов').default(''),
   summary: z.string().trim().max(1000).default(''),
   content_md: markdown(100 * 1024).refine((s) => s.trim().length > 0, 'Текст доклада: обязательно'),
   group_id: id,

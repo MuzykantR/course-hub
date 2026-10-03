@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { AdminPageTitle, AdminTable, FilterLinks, StatusPill } from '@/components/admin/Table';
-import { VerdictBadge } from '@/components/ui/Badge';
 import { EmptyState } from '@/components/ui/PageHeader';
 import { requireTeacher } from '@/lib/auth/guards';
 import { adminTasks } from '@/lib/db/queries/admin';
@@ -36,7 +35,7 @@ export default async function AdminTasksPage({
       {tasks.length === 0 ? (
         <EmptyState>Задач нет.</EmptyState>
       ) : (
-        <AdminTable head={['Занятие', 'Задача', 'Статус', 'Вердикт', 'У доски', 'Решения']}>
+        <AdminTable head={['Занятие', 'Задача', 'Статус', 'Решал на паре', 'Решения']}>
           {tasks.map((t) => (
             <tr key={t.id}>
               <td className="whitespace-nowrap font-mono text-theme-muted">
@@ -49,9 +48,6 @@ export default async function AdminTasksPage({
               </td>
               <td>
                 <StatusPill status={t.status} />
-              </td>
-              <td>
-                <VerdictBadge verdict={t.verdict} />
               </td>
               <td>
                 {t.assigned_student_id ? people.studentById.get(t.assigned_student_id)?.name : '—'}

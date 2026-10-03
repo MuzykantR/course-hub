@@ -5,14 +5,13 @@ import { Presentation } from 'lucide-react';
 import { CodeBlock } from '@/components/code/CodeBlock';
 import { PyRunner } from '@/components/code/PyRunner';
 import { MarkdownContent } from '@/components/markdown/MarkdownContent';
-import { Badge, DifficultyBadge, TagLink, verdictLabel } from '@/components/ui/Badge';
+import { Badge, DifficultyBadge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { EmptyState, PageHeader, SectionTitle } from '@/components/ui/PageHeader';
 import { requireSession } from '@/lib/auth/guards';
 import { getTask } from '@/lib/db/queries/content';
 import { getPeople } from '@/lib/db/queries/people';
 import { formatDate, formatShortDate } from '@/lib/format';
-import { kbHref } from '@/lib/validation/kb';
 import { parseTaskTests } from '@/lib/python/protocol';
 import { parseIdParam } from '@/lib/validation/params';
 
@@ -24,15 +23,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: task?.title ?? 'Задача' };
 }
 
-function Stat({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-0.5">
-      <dt className="text-sm opacity-70">{label}</dt>
-      <dd className="font-bold">{value}</dd>
-    </div>
-  );
-}
-
 export default async function TaskPage({ params }: Props) {
   const session = await requireSession();
   const id = parseIdParam((await params).id);
@@ -42,8 +32,6 @@ export default async function TaskPage({ params }: Props) {
   const assigned = task.assigned_student_id
     ? people.studentById.get(task.assigned_student_id)
     : undefined;
-
-  const showBoard = Boolean(assigned || task.verdict);
 
   return (
     <>
@@ -60,9 +48,6 @@ export default async function TaskPage({ params }: Props) {
       >
         <div className="flex flex-wrap items-center gap-2">
           <DifficultyBadge difficulty={task.difficulty} />
-          {task.tags.map((tag) => (
-            <TagLink key={tag} tag={tag} href={kbHref({}, { tag })} />
-          ))}
         </div>
       </PageHeader>
 
@@ -92,32 +77,15 @@ export default async function TaskPage({ params }: Props) {
         </div>
 
         <aside className="flex flex-col gap-6 lg:sticky lg:top-6">
-          {showBoard && (
-            <section className="flex flex-col gap-3 rounded-card border-2 border-theme-border bg-theme-accent p-5 text-theme-accentText shadow-neo">
-              <h2 className="text-lg font-bold">Разобрано у доски</h2>
-              <dl className="grid grid-cols-2 gap-3">
-                <Stat
-                  label="Решал"
-                  value={
-                    assigned ? (
-                      <Link href={`/students/${assigned.slug}`} className="hover:underline">
-                        {assigned.name}
-                      </Link>
-                    ) : (
-                      '—'
-                    )
-                  }
-                />
-                <Stat label="Вердикт" value={verdictLabel(task.verdict)} />
-                <Stat
-                  label="Время"
-                  value={task.runtime_ms != null ? `${task.runtime_ms} мс` : '—'}
-                />
-                <Stat
-                  label="Память"
-                  value={task.memory_mb != null ? `${task.memory_mb} МБ` : '—'}
-                />
-              </dl>
+          {assigned && (
+            <section className="flex flex-col gap-1 rounded-card border-2 border-theme-border bg-theme-accent p-5 text-theme-accentText shadow-neo">
+              <h2 className="text-sm font-semibold opacity-70">Решал на паре</h2>
+              <Link
+                href={`/students/${assigned.slug}`}
+                className="font-display text-lg font-bold hover:underline"
+              >
+                {assigned.name}
+              </Link>
             </section>
           )}
 
@@ -177,7 +145,7 @@ export default async function TaskPage({ params }: Props) {
                   )}
                   {s.is_featured && (
                     <Badge tone="accent">
-                      <Presentation className="h-3.5 w-3.5" /> Разобрано у доски
+                      <Presentation className="h-3.5 w-3.5" /> Разобрано на паре
                     </Badge>
                   )}
                   <span className="ml-auto text-xs text-theme-muted">

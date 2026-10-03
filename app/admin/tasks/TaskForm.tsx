@@ -7,7 +7,6 @@ import {
   EnumOptions,
   StudentOptions,
   TASK_STATUS_LABELS,
-  VERDICT_LABELS,
 } from '@/components/admin/Options';
 import { Card } from '@/components/ui/Card';
 import { Field, Textarea, valueOf } from '@/components/ui/Field';
@@ -27,9 +26,6 @@ export type TaskFormValues = {
   tags: string[];
   assigned_student_id: number | null;
   status: string;
-  verdict: string;
-  runtime_ms: number | null;
-  memory_mb: number | null;
   tests: unknown;
 };
 
@@ -107,7 +103,12 @@ export function TaskForm({
               <EnumOptions labels={DIFFICULTY_LABELS} />
             </Select>
           </Field>
-          <Field label="У доски" htmlFor="assigned_student_id" error={fe.assigned_student_id}>
+          <Field
+            label="Решал на паре"
+            htmlFor="assigned_student_id"
+            error={fe.assigned_student_id}
+            hint="Кому поручили разобрать задачу на занятии"
+          >
             <Select
               id="assigned_student_id"
               name="assigned_student_id"
@@ -119,41 +120,8 @@ export function TaskForm({
           </Field>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-3">
-          <Field label="Вердикт" htmlFor="verdict" error={fe.verdict}>
-            <Select id="verdict" name="verdict" defaultValue={v('verdict')}>
-              <EnumOptions labels={VERDICT_LABELS} />
-            </Select>
-          </Field>
-          <Field label="Время, мс" htmlFor="runtime_ms" error={fe.runtime_ms}>
-            <Input
-              id="runtime_ms"
-              name="runtime_ms"
-              type="number"
-              min={0}
-              defaultValue={v('runtime_ms')}
-            />
-          </Field>
-          <Field label="Память, МБ" htmlFor="memory_mb" error={fe.memory_mb}>
-            <Input
-              id="memory_mb"
-              name="memory_mb"
-              type="number"
-              min={0}
-              step="0.01"
-              defaultValue={v('memory_mb')}
-            />
-          </Field>
-        </div>
-
-        <Field
-          label="Теги"
-          htmlFor="tags"
-          error={fe.tags}
-          hint="Через запятую: arrays, two-pointers"
-        >
-          <Input id="tags" name="tags" defaultValue={v('tags')} placeholder="arrays, hash-map" />
-        </Field>
+        {/* Tags are hidden from the UI for now; the hidden field keeps existing values. */}
+        <input type="hidden" name="tags" defaultValue={v('tags') ?? ''} />
 
         <Field label="Условие (Markdown)" htmlFor="statement_md" error={fe.statement_md}>
           <Textarea

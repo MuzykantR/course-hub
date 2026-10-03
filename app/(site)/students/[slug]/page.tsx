@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { VerdictBadge } from '@/components/ui/Badge';
+import { Badge } from '@/components/ui/Badge';
 import { EmptyState, PageHeader, SectionTitle } from '@/components/ui/PageHeader';
 import { requireSession } from '@/lib/auth/guards';
 import { getStudentContributions } from '@/lib/db/queries/content';
@@ -57,7 +57,7 @@ export default async function StudentPage({ params }: Props) {
               <Link href={`/tasks/${t.id}`} className="font-bold hover:underline">
                 {t.title}
               </Link>
-              {t.verdict && <VerdictBadge verdict={t.verdict} />}
+              {t.presented && <Badge tone="accent">Решал на паре</Badge>}
               {t.date && (
                 <span className="ml-auto text-xs text-theme-muted">{formatDate(t.date)}</span>
               )}

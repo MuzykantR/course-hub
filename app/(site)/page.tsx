@@ -1,24 +1,23 @@
 import Link from 'next/link';
 import { Presentation, Search } from 'lucide-react';
 import { StudentLinks } from '@/components/kb/People';
-import { Badge, TagLink } from '@/components/ui/Badge';
+import { Badge } from '@/components/ui/Badge';
 import { EmptyState, SectionTitle } from '@/components/ui/PageHeader';
 import { requireSession } from '@/lib/auth/guards';
 import { getHomeData, getLesson } from '@/lib/db/queries/content';
-import { listKbTags } from '@/lib/db/queries/kb';
 import { getPeople } from '@/lib/db/queries/people';
 import { formatDate, formatShortDate, plainExcerpt, plural } from '@/lib/format';
-import { kbHref } from '@/lib/validation/kb';
 
 const card = 'rounded-card border-2 border-theme-border bg-theme-card shadow-neo backdrop-blur';
 
 export default async function Home() {
   await requireSession();
-  const [{ counts, recentSolutions, recentReports, latestLesson }, people, tags] =
-    await Promise.all([getHomeData(), getPeople(), listKbTags()]);
+  const [{ counts, recentSolutions, recentReports, latestLesson }, people] = await Promise.all([
+    getHomeData(),
+    getPeople(),
+  ]);
   const lesson = latestLesson ? await getLesson(latestLesson.id) : null;
   const excerpt = lesson ? plainExcerpt(lesson.description_md) : '';
-  const topTags = tags.slice(0, 6);
   type Part = { value: number; forms: [string, string, string]; anchor: string };
   const lessonParts: Part[] = lesson
     ? (
@@ -119,16 +118,6 @@ export default async function Home() {
               <Search className="h-4 w-4" />
             </button>
           </div>
-          {topTags.length > 0 && (
-            <>
-              <span className="text-sm text-theme-muted">Часто ищут</span>
-              <div className="flex flex-wrap gap-1.5">
-                {topTags.map(({ tag }) => (
-                  <TagLink key={tag} tag={tag} href={kbHref({}, { tag })} />
-                ))}
-              </div>
-            </>
-          )}
           <div className="mt-auto grid grid-cols-2 gap-x-3 gap-y-1 border-t-2 border-theme-cardMuted pt-3">
             {stats.map((s) => (
               <Link
@@ -160,7 +149,7 @@ export default async function Home() {
                       {s.task.title}
                     </Link>
                     {s.is_featured && (
-                      <Badge tone="accent" className="px-1.5" title="Разобрано у доски">
+                      <Badge tone="accent" className="px-1.5" title="Разобрано на паре">
                         <Presentation className="h-3.5 w-3.5" />
                       </Badge>
                     )}
@@ -196,8 +185,10 @@ export default async function Home() {
                     </span>
                   </div>
                   <span className="text-sm text-theme-secondary">
-                    <span className="font-mono text-xs text-theme-muted">{r.library}</span>
-                    {r.authorIds.length > 0 && ' · '}
+                    {r.library && (
+                      <span className="font-mono text-xs text-theme-muted">{r.library}</span>
+                    )}
+                    {r.library && r.authorIds.length > 0 && ' · '}
                     <StudentLinks ids={r.authorIds} people={people} />
                   </span>
                 </li>

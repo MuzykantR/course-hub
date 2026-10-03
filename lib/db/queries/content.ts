@@ -44,7 +44,7 @@ export const getLesson = cache(async (id: number) => {
     await db()
       .from('tasks')
       .select(
-        'id, order, title, difficulty, tags, status, verdict, assigned_student_id, solutions(id, status)',
+        'id, order, title, difficulty, tags, status, assigned_student_id, solutions(id, status)',
       )
       .eq('lesson_id', id)
       .neq('status', 'draft')
@@ -92,7 +92,7 @@ export const getTask = cache(async (id: number) => {
     await db()
       .from('tasks')
       .select(
-        'id, order, title, statement_md, difficulty, tags, status, verdict, runtime_ms, memory_mb, assigned_student_id, tests, lesson:lessons(id, date, number, title)',
+        'id, order, title, statement_md, difficulty, tags, status, assigned_student_id, tests, lesson:lessons(id, date, number, title)',
       )
       .eq('id', id)
       .neq('status', 'draft')
@@ -138,8 +138,8 @@ export type StudentTask = {
   id: number;
   title: string;
   date: string | null;
-  /** Verdict of the board attempt — only when the task was assigned to this student. */
-  verdict: string | null;
+  /** The student solved this task at the seminar (it was assigned to them). */
+  presented: boolean;
   hasSolution: boolean;
 };
 
@@ -148,7 +148,7 @@ export async function getStudentContributions(studentId: number) {
   const [assigned, solutions, reports] = await Promise.all([
     db()
       .from('tasks')
-      .select('id, title, verdict, lesson:lessons(date)')
+      .select('id, title, lesson:lessons(date)')
       .eq('assigned_student_id', studentId)
       .neq('status', 'draft'),
     db()
@@ -170,7 +170,7 @@ export async function getStudentContributions(studentId: number) {
       id: t.id,
       title: t.title,
       date: t.lesson?.date ?? null,
-      verdict: t.verdict,
+      presented: true,
       hasSolution: false,
     });
   }
@@ -182,7 +182,7 @@ export async function getStudentContributions(studentId: number) {
         id: task.id,
         title: task.title,
         date: task.lesson?.date ?? null,
-        verdict: null,
+        presented: false,
         hasSolution: true,
       });
   }
