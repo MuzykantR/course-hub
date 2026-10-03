@@ -56,23 +56,6 @@ export function TagLink({ tag, href }: { tag: string; href: string }) {
   );
 }
 
-const VERDICTS: Record<string, { label: string; tone: Tone }> = {
-  accepted: { label: 'Accepted', tone: 'green' },
-  wrong_answer: { label: 'Wrong Answer', tone: 'red' },
-  tle: { label: 'Time Limit', tone: 'amber' },
-  runtime_error: { label: 'Runtime Error', tone: 'red' },
-  not_checked: { label: 'Не проверено', tone: 'neutral' },
-};
-
-export function verdictLabel(verdict: string | null): string {
-  return (VERDICTS[verdict ?? 'not_checked'] ?? VERDICTS.not_checked!).label;
-}
-
-export function VerdictBadge({ verdict }: { verdict: string | null }) {
-  const v = VERDICTS[verdict ?? 'not_checked'] ?? VERDICTS.not_checked!;
-  return <Badge tone={v.tone}>{v.label}</Badge>;
-}
-
 const DIFFICULTY: Record<string, { label: string; tone: Tone }> = {
   easy: { label: 'Лёгкая', tone: 'green' },
   medium: { label: 'Средняя', tone: 'amber' },

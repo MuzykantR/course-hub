@@ -128,9 +128,8 @@ export async function submitReport(_prev: FormState, fd: FormData): Promise<Form
   const { data: report, error } = await db()
     .from('reports')
     .insert({
-      slug: await freeReportSlug(d.library, d.title),
+      slug: await freeReportSlug('', d.title),
       title: d.title,
-      library: d.library,
       summary: d.summary,
       content_md: d.content_md,
       group_id: me.group_id,

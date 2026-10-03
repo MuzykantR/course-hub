@@ -4,13 +4,11 @@ import { Pencil } from 'lucide-react';
 import { CodeBlock } from '@/components/code/CodeBlock';
 import { AdminPageTitle } from '@/components/admin/Table';
 import { MarkdownContent } from '@/components/markdown/MarkdownContent';
-import { TagLink } from '@/components/ui/Badge';
 import { EmptyState, SectionTitle } from '@/components/ui/PageHeader';
 import { requireTeacher } from '@/lib/auth/guards';
 import { moderationQueue } from '@/lib/db/queries/admin';
 import { getPeople } from '@/lib/db/queries/people';
 import { formatDate } from '@/lib/format';
-import { kbHref } from '@/lib/validation/kb';
 import { ModerationForm } from './ModerationForm';
 
 export const metadata: Metadata = { title: 'Модерация' };
@@ -89,13 +87,6 @@ export default async function ModerationPage() {
                 </Link>
               </header>
               {r.summary && <p className="text-theme-secondary">{r.summary}</p>}
-              {r.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1.5">
-                  {r.tags.map((t) => (
-                    <TagLink key={t} tag={t} href={kbHref({}, { tag: t })} />
-                  ))}
-                </div>
-              )}
               <details className="rounded-xl border-2 border-theme-borderSubtle p-4">
                 <summary className="cursor-pointer font-semibold">Текст доклада</summary>
                 <MarkdownContent

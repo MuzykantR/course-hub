@@ -32,7 +32,7 @@ export function ModerationForm({ kind, id }: { kind: 'solution' | 'report'; id: 
         defaultValue={typeof state.values?.comment === 'string' ? state.values.comment : ''}
         className="min-h-0"
       />
-      {kind === 'solution' && <Checkbox name="is_featured" label="Разобрано у доски" />}
+      {kind === 'solution' && <Checkbox name="is_featured" label="Разобрано на паре" />}
       <FormMessage state={state} />
       <div className="flex flex-wrap gap-2">
         <Button type="submit" onClick={choose('approve')} disabled={pending}>

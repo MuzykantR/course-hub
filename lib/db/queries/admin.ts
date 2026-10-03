@@ -36,7 +36,7 @@ export async function adminLesson(id: number) {
   const tasks = rows(
     await db()
       .from('tasks')
-      .select('id, order, title, status, verdict, assigned_student_id')
+      .select('id, order, title, status, assigned_student_id')
       .eq('lesson_id', id)
       .order('order'),
     'admin lesson tasks',
@@ -75,7 +75,7 @@ export async function adminTasks(filters: { lessonId?: number; status?: string }
   let q = db()
     .from('tasks')
     .select(
-      'id, order, title, status, verdict, difficulty, assigned_student_id, lesson:lessons!inner(id, number, date, title), solutions(id, status)',
+      'id, order, title, status, difficulty, assigned_student_id, lesson:lessons!inner(id, number, date, title), solutions(id, status)',
     )
     .order('date', { referencedTable: 'lessons', ascending: false })
     .order('order');
@@ -96,7 +96,7 @@ export async function adminTask(id: number) {
     await db()
       .from('tasks')
       .select(
-        'id, lesson_id, order, title, statement_md, difficulty, tags, assigned_student_id, status, verdict, runtime_ms, memory_mb, tests',
+        'id, lesson_id, order, title, statement_md, difficulty, tags, assigned_student_id, status, tests',
       )
       .eq('id', id)
       .maybeSingle(),
@@ -221,7 +221,7 @@ export async function groupOverview(groupId: number) {
     await db()
       .from('lesson_groups')
       .select(
-        'lesson:lessons!inner(id, number, date, title, tasks(id, order, title, status, verdict, assigned_student_id))',
+        'lesson:lessons!inner(id, number, date, title, tasks(id, order, title, status, assigned_student_id))',
       )
       .eq('group_id', groupId),
     'overview lessons',

@@ -46,28 +46,16 @@ export function ReportSubmitForm({
     <Card size="lg">
       <form key={formKey(state)} action={action} className="relative flex flex-col gap-5">
         <Honeypot />
-        <div className="grid gap-4 sm:grid-cols-[1fr_14rem]">
-          <Field label="Название доклада" htmlFor="title" error={fe.title}>
-            <Input
-              id="title"
-              name="title"
-              required
-              minLength={3}
-              maxLength={200}
-              defaultValue={valueOf(state, 'title', '')}
-            />
-          </Field>
-          <Field label="Библиотека" htmlFor="library" error={fe.library}>
-            <Input
-              id="library"
-              name="library"
-              required
-              maxLength={100}
-              placeholder="pandas"
-              defaultValue={valueOf(state, 'library', '')}
-            />
-          </Field>
-        </div>
+        <Field label="Название доклада" htmlFor="title" error={fe.title}>
+          <Input
+            id="title"
+            name="title"
+            required
+            minLength={3}
+            maxLength={200}
+            defaultValue={valueOf(state, 'title', '')}
+          />
+        </Field>
         <Field
           label="Кратко"
           htmlFor="summary"
@@ -81,7 +69,7 @@ export function ReportSubmitForm({
             defaultValue={valueOf(state, 'summary', '')}
           />
         </Field>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4">
           <Field label="Занятие (необязательно)" htmlFor="lesson_id" error={fe.lesson_id}>
             <Select id="lesson_id" name="lesson_id" defaultValue={valueOf(state, 'lesson_id', '')}>
               <option value="">— без занятия —</option>
@@ -91,9 +79,6 @@ export function ReportSubmitForm({
                 </option>
               ))}
             </Select>
-          </Field>
-          <Field label="Теги" htmlFor="tags" error={fe.tags} hint="Через запятую: http, parsing">
-            <Input id="tags" name="tags" defaultValue={valueOf(state, 'tags', '')} />
           </Field>
         </div>
 

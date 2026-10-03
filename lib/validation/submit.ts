@@ -30,7 +30,6 @@ export const reportSubmitSchema = z.object({
     .trim()
     .min(3, 'Название: минимум 3 символа')
     .max(200, 'Название: до 200 символов'),
-  library: z.string().trim().min(1, 'Укажите библиотеку').max(100, 'Библиотека: до 100 символов'),
   summary: z.string().trim().max(1000, 'Кратко: до 1000 символов').default(''),
   lesson_id: z.preprocess(empty, id.optional()),
   tags: tagsField,

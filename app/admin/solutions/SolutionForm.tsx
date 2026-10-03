@@ -113,7 +113,7 @@ export function SolutionForm({
           <div className="flex items-end pb-2">
             <Checkbox
               name="is_featured"
-              label="Разобрано у доски"
+              label="Разобрано на паре"
               hint="Такое решение показывается первым."
               defaultChecked={checkedOf(state, 'is_featured', solution.is_featured)}
             />

@@ -73,7 +73,7 @@ export default async function AdminSolutionsPage({
                 {s.is_featured && (
                   <Presentation
                     className="ml-2 inline h-4 w-4 text-theme-muted"
-                    aria-label="У доски"
+                    aria-label="Разобрано на паре"
                   />
                 )}
               </td>

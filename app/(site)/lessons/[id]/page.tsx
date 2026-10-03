@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { GroupLinks } from '@/components/kb/People';
 import { MarkdownContent } from '@/components/markdown/MarkdownContent';
-import { DifficultyBadge, VerdictBadge } from '@/components/ui/Badge';
+import { DifficultyBadge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { EmptyState, PageHeader, SectionTitle } from '@/components/ui/PageHeader';
 import { requireSession } from '@/lib/auth/guards';
@@ -69,10 +69,9 @@ export default async function LessonPage({ params }: Props) {
                   </div>
                   <div className="flex flex-wrap items-center gap-2 text-sm text-theme-secondary">
                     <DifficultyBadge difficulty={t.difficulty} />
-                    <VerdictBadge verdict={t.verdict} />
                     {student && (
                       <span>
-                        У доски:{' '}
+                        Решал на паре:{' '}
                         <Link
                           href={`/students/${student.slug}`}
                           className="font-semibold hover:underline"

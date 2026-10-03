@@ -52,25 +52,25 @@ begin
     returning id into l3;
   insert into public.lesson_groups values (l1, g1), (l1, g2), (l2, g1), (l2, g2), (l3, g1);
 
-  insert into public.tasks (lesson_id, "order", title, statement_md, difficulty, tags, assigned_student_id, status, verdict, runtime_ms, memory_mb)
+  insert into public.tasks (lesson_id, "order", title, statement_md, difficulty, tags, assigned_student_id, status)
   values (l1, 1, 'Два числа с заданной суммой',
     E'Дан **отсортированный** список `nums` и число `target`. Верните индексы двух элементов, сумма которых равна `target`.\n\n```python\n>>> two_sum([1, 3, 4, 6, 9], 13)\n(2, 4)\n```\n\nОграничения: $2 \le n \le 10^5$.',
-    'easy', '{arrays,two-pointers}', anna, 'solved', 'accepted', 48, 17.2)
+    'easy', '{arrays,two-pointers}', anna, 'solved')
   returning id into t1;
   update public.tasks set tests = '[
     {"type": "assert", "name": "пример из условия", "code": "assert two_sum([1, 3, 4, 6, 9], 13) == (2, 4)"},
     {"type": "assert", "name": "два элемента", "code": "assert two_sum([2, 5], 7) == (0, 1)"},
     {"type": "assert", "name": "отрицательные", "code": "assert two_sum([-5, -1, 0, 3], -6) == (0, 1)"}
   ]'::jsonb where id = t1;
-  insert into public.tasks (lesson_id, "order", title, statement_md, difficulty, tags, assigned_student_id, status, verdict)
+  insert into public.tasks (lesson_id, "order", title, statement_md, difficulty, tags, assigned_student_id, status)
   values (l1, 2, 'Слияние отсортированных списков',
     E'Слейте два отсортированных списка в один отсортированный за $O(n + m)$.',
-    'medium', '{arrays,two-pointers,sorting}', boris, 'solved', 'wrong_answer')
+    'medium', '{arrays,two-pointers,sorting}', boris, 'solved')
   returning id into t2;
-  insert into public.tasks (lesson_id, "order", title, statement_md, difficulty, tags, assigned_student_id, status, verdict)
+  insert into public.tasks (lesson_id, "order", title, statement_md, difficulty, tags, assigned_student_id, status)
   values (l2, 1, 'Анаграммы',
     E'Сгруппируйте слова, являющиеся анаграммами друг друга.\n\n| вход | выход |\n|---|---|\n| `[\"eat\", \"tea\", \"tan\"]` | `[[\"eat\", \"tea\"], [\"tan\"]]` |',
-    'medium', '{hash-map,strings}', gleb, 'assigned', 'not_checked')
+    'medium', '{hash-map,strings}', gleb, 'assigned')
   returning id into t3;
   insert into public.tasks (lesson_id, "order", title, statement_md, difficulty, tags, status)
   values (l3, 1, 'Числа Фибоначчи (черновик)', 'Черновик — не должен быть виден студентам.', 'easy', '{recursion}', 'draft')

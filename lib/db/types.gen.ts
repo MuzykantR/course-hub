@@ -224,7 +224,7 @@ export type Database = {
           group_id: number;
           id?: never;
           lesson_id?: number | null;
-          library: string;
+          library?: string;
           review_comment?: string | null;
           reviewed_at?: string | null;
           search?: unknown;
@@ -418,16 +418,13 @@ export type Database = {
           difficulty: string;
           id: number;
           lesson_id: number;
-          memory_mb: number | null;
           order: number;
-          runtime_ms: number | null;
           search: unknown;
           statement_md: string;
           status: string;
           tags: string[];
           tests: Json | null;
           title: string;
-          verdict: string;
         };
         Insert: {
           assigned_student_id?: number | null;
@@ -435,16 +432,13 @@ export type Database = {
           difficulty?: string;
           id?: never;
           lesson_id: number;
-          memory_mb?: number | null;
           order?: number;
-          runtime_ms?: number | null;
           search?: unknown;
           statement_md?: string;
           status?: string;
           tags?: string[];
           tests?: Json | null;
           title: string;
-          verdict?: string;
         };
         Update: {
           assigned_student_id?: number | null;
@@ -452,16 +446,13 @@ export type Database = {
           difficulty?: string;
           id?: never;
           lesson_id?: number;
-          memory_mb?: number | null;
           order?: number;
-          runtime_ms?: number | null;
           search?: unknown;
           statement_md?: string;
           status?: string;
           tags?: string[];
           tests?: Json | null;
           title?: string;
-          verdict?: string;
         };
         Relationships: [
           {
@@ -496,7 +487,6 @@ export type Database = {
           tags: string[] | null;
           title: string | null;
           type: string | null;
-          verdict: string | null;
         };
         Relationships: [];
       };

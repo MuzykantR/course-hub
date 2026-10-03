@@ -45,9 +45,6 @@ export default async function NewTaskPage({
           tags: [],
           assigned_student_id: null,
           status: 'draft',
-          verdict: 'not_checked',
-          runtime_ms: null,
-          memory_mb: null,
           tests: null,
         }}
       />

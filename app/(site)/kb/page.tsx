@@ -7,10 +7,9 @@ import { Button } from '@/components/ui/Button';
 import { Input, Label, Select } from '@/components/ui/Input';
 import { EmptyState, PageHeader } from '@/components/ui/PageHeader';
 import { requireSession } from '@/lib/auth/guards';
-import { KB_PAGE_SIZE, listKb, listKbTags } from '@/lib/db/queries/kb';
+import { KB_PAGE_SIZE, listKb } from '@/lib/db/queries/kb';
 import { getPeople } from '@/lib/db/queries/people';
 import { plural } from '@/lib/format';
-import { cn } from '@/lib/cn';
 import { kbHref, parseKbFilters } from '@/lib/validation/kb';
 
 export const metadata: Metadata = { title: 'База знаний' };
@@ -22,11 +21,7 @@ export default async function KbPage({
 }) {
   const session = await requireSession();
   const filters = parseKbFilters(await searchParams);
-  const [{ items, total }, tags, people] = await Promise.all([
-    listKb(filters),
-    listKbTags(),
-    getPeople(),
-  ]);
+  const [{ items, total }, people] = await Promise.all([listKb(filters), getPeople()]);
   const pages = Math.max(1, Math.ceil(total / KB_PAGE_SIZE));
   const hasFilters = Boolean(
     filters.q || filters.type || filters.group || filters.student || filters.tag,
@@ -125,31 +120,6 @@ export default async function KbPage({
             </Select>
           </div>
         </div>
-        {tags.length > 0 && (
-          <div className="flex flex-wrap items-center gap-1.5">
-            <span className="mr-1 text-xs font-bold uppercase tracking-widest text-theme-muted">
-              Теги
-            </span>
-            {tags.slice(0, 30).map(({ tag, count }) => {
-              const active = filters.tag === tag;
-              return (
-                <Link
-                  key={tag}
-                  href={kbHref(filters, { tag: active ? undefined : tag })}
-                  aria-current={active ? 'true' : undefined}
-                  className={cn(
-                    'rounded-pill border-2 px-2.5 py-0.5 font-mono text-xs font-semibold transition',
-                    active
-                      ? 'border-theme-border bg-theme-accent text-theme-accentText'
-                      : 'border-theme-border/30 bg-theme-cardMuted hover:border-theme-border',
-                  )}
-                >
-                  #{tag} <span className="opacity-60">{count}</span>
-                </Link>
-              );
-            })}
-          </div>
-        )}
       </form>
 
       <section className="flex flex-col gap-4" aria-live="polite">
@@ -176,12 +146,7 @@ export default async function KbPage({
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
             {items.map((item) => (
-              <KbItemCard
-                key={`${item.type}-${item.id}`}
-                item={item}
-                people={people}
-                filters={filters}
-              />
+              <KbItemCard key={`${item.type}-${item.id}`} item={item} people={people} />
             ))}
           </div>
         )}

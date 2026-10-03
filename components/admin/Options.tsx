@@ -37,14 +37,6 @@ export const TASK_STATUS_LABELS: Record<string, string> = {
   solved: 'Решена',
 };
 
-export const VERDICT_LABELS: Record<string, string> = {
-  not_checked: 'Не проверено',
-  accepted: 'Accepted',
-  wrong_answer: 'Wrong Answer',
-  tle: 'Time Limit Exceeded',
-  runtime_error: 'Runtime Error',
-};
-
 export const REVIEW_STATUS_LABELS: Record<string, string> = {
   pending: 'На модерации',
   approved: 'Одобрено (опубликовано)',
