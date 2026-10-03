@@ -37,7 +37,8 @@ export function plural(n: number, forms: [string, string, string]): string {
 
 /**
  * First paragraph of Markdown as plain text, cut at a word boundary: for previews of
- * lesson descriptions. Headings, code blocks, images and link targets are dropped.
+ * lesson descriptions. Headings, code blocks, images and link targets are dropped; inline
+ * TeX is flattened to plain text.
  */
 export function plainExcerpt(md: string, max = 180): string {
   const paragraph =
@@ -47,9 +48,18 @@ export function plainExcerpt(md: string, max = 180): string {
       .map((p) => p.trim())
       .find((p) => p && !p.startsWith('#')) ?? '';
   const text = paragraph
+    // Inline math has no renderer here: `$O(\log n)$` → `O(log n)`.
+    .replace(/\$\$?([^$]+)\$\$?/g, (_, tex: string) =>
+      tex
+        .replace(/\\([a-zA-Z]+)/g, '$1')
+        .replace(/\\[,;: ]/g, ' ')
+        .replace(/[{}]/g, ''),
+    )
     .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
     .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
-    .replace(/[*_`>~]/g, '')
+    .replace(/[*`>~]/g, '')
+    // `_` marks emphasis only at word edges; keep it inside identifiers like lru_cache.
+    .replace(/(?<![\p{L}\p{N}])_+|_+(?![\p{L}\p{N}])/gu, '')
     .replace(/^\s*[-+]\s+/gm, '')
     .replace(/\s+/g, ' ')
     .trim();

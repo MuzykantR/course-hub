@@ -16,6 +16,19 @@ describe('plainExcerpt', () => {
     expect(plainExcerpt('один два три четыре', 12)).toBe('один два…');
   });
 
+  it('flattens inline math to plain text', () => {
+    expect(plainExcerpt('Поиск за $O(\\log n)$, память $O(1)$.')).toBe(
+      'Поиск за O(log n), память O(1).',
+    );
+    expect(plainExcerpt('Цикл $$i \\le n$$ шагов')).toBe('Цикл i le n шагов');
+  });
+
+  it('keeps underscores inside identifiers but drops _emphasis_', () => {
+    expect(plainExcerpt('Кэш через `functools.lru_cache` и _мемоизацию_.')).toBe(
+      'Кэш через functools.lru_cache и мемоизацию.',
+    );
+  });
+
   it('returns an empty string for empty input', () => {
     expect(plainExcerpt('')).toBe('');
   });
