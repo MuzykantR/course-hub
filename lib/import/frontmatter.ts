@@ -19,8 +19,8 @@ const list = (v: string | undefined) =>
 
 /**
  * Optional front matter between `---` lines (`key: value`, one per line). Missing fields are
- * inferred: title from the first `# ` heading (which is then dropped from the body), library
- * from the file name.
+ * inferred: title from the first `# ` heading (which is then dropped from the body); the
+ * library is optional and stays empty when not given.
  */
 export function parseReportFile(fileName: string, text: string): ReportMeta {
   let body = text.replace(/^﻿/, '').replace(/\r\n?/g, '\n');
@@ -47,7 +47,7 @@ export function parseReportFile(fileName: string, text: string): ReportMeta {
 
   return {
     title: title || base,
-    library: fields.library || base.split(/[_\s-]/)[0] || base,
+    library: fields.library ?? '',
     authors: list(fields.authors ?? fields.author),
     group: fields.group || undefined,
     lesson: lesson && Number.isInteger(lesson) && lesson > 0 ? lesson : undefined,

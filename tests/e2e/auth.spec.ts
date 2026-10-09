@@ -7,12 +7,19 @@ test.beforeEach(async () => {
 });
 
 test('without a session every page redirects to /login and keeps the target', async ({ page }) => {
-  for (const path of ['/', '/kb', '/admin', '/me', '/submit/solution']) {
+  for (const path of ['/', '/kb', '/admin', '/me', '/submit/solution', '/reliability']) {
     await page.goto(path);
     await expect(page).toHaveURL(/\/login/);
   }
   await page.goto('/admin/moderation');
   await expect(page).toHaveURL(/\/login\?next=%2Fadmin%2Fmoderation/);
+});
+
+test('the health check is public, uncached and returns no data', async ({ request }) => {
+  const res = await request.get('/api/health');
+  expect(res.status()).toBe(200);
+  expect(res.headers()['cache-control']).toContain('no-store');
+  expect(await res.json()).toEqual({ ok: true });
 });
 
 test('a wrong password shows an error', async ({ page }) => {

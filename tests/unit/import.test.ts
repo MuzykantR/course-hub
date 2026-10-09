@@ -20,10 +20,10 @@ describe('parseReportFile', () => {
     });
   });
 
-  it('falls back to the first heading and the file name', () => {
+  it('falls back to the first heading and leaves the library empty', () => {
     const meta = parseReportFile('django_intro.md', '# Django за вечер\n\nТекст');
     expect(meta.title).toBe('Django за вечер');
-    expect(meta.library).toBe('django');
+    expect(meta.library).toBe('');
     expect(meta.body).toBe('Текст');
     expect(meta.authors).toEqual([]);
   });

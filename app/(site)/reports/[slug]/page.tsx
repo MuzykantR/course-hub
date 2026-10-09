@@ -12,6 +12,7 @@ import { formatDate } from '@/lib/format';
 import { markdownToHast, type TocEntry } from '@/lib/markdown/pipeline';
 import { kbHref } from '@/lib/validation/kb';
 import { parseSlugParam } from '@/lib/validation/params';
+import { recordPageView } from '@/lib/metrics';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -43,6 +44,7 @@ function Toc({ toc }: { toc: TocEntry[] }) {
 }
 
 export default async function ReportPage({ params }: Props) {
+  const startedAt = performance.now();
   await requireSession();
   const slug = parseSlugParam((await params).slug);
   const [report, people] = await Promise.all([getReport(slug), getPeople()]);
@@ -52,6 +54,7 @@ export default async function ReportPage({ params }: Props) {
     assetBase: `/api/assets/reports/${report.id}`,
   });
 
+  recordPageView('/reports/[slug]', startedAt);
   return (
     <>
       <PageHeader

@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { SESSION_COOKIE, verifySession } from '@/lib/auth/token';
 
-// First gate: a valid signature is required everywhere except /login. Role checks and the
+// First gate: a valid signature is required everywhere except /login and /api/health. Role checks and the
 // course-password version check happen server-side in lib/auth/guards.ts.
 export async function middleware(req: NextRequest) {
   const secret = process.env.SESSION_SECRET;
@@ -10,7 +10,8 @@ export async function middleware(req: NextRequest) {
     : null;
   const { pathname, search } = req.nextUrl;
 
-  if (pathname === '/login') {
+  // /api/health is public: the external uptime pinger has no session (it returns no data).
+  if (pathname === '/login' || pathname === '/api/health') {
     return NextResponse.next();
   }
 

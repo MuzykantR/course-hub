@@ -16,6 +16,8 @@ const schema = z.object({
     .string()
     .regex(/^[\w./-]+$/)
     .default('main'),
+  // Secret in the UptimeRobot URL (`/api/health?token=…`): only such pings count toward SLO 1.
+  HEALTH_CHECK_TOKEN: z.string().min(16).optional(),
 });
 
 let cached: z.infer<typeof schema> | undefined;

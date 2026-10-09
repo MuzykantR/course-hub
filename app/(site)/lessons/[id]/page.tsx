@@ -11,6 +11,7 @@ import { getLesson } from '@/lib/db/queries/content';
 import { getPeople } from '@/lib/db/queries/people';
 import { formatDate, plural } from '@/lib/format';
 import { parseIdParam } from '@/lib/validation/params';
+import { recordPageView } from '@/lib/metrics';
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -21,11 +22,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function LessonPage({ params }: Props) {
+  const startedAt = performance.now();
   await requireSession();
   const id = parseIdParam((await params).id);
   const [lesson, people] = await Promise.all([getLesson(id), getPeople()]);
   if (!lesson) notFound();
 
+  recordPageView('/lessons/[id]', startedAt);
   return (
     <>
       <PageHeader

@@ -7,10 +7,12 @@ import { requireSession } from '@/lib/auth/guards';
 import { getHomeData, getLesson } from '@/lib/db/queries/content';
 import { getPeople } from '@/lib/db/queries/people';
 import { formatDate, formatShortDate, plainExcerpt, plural } from '@/lib/format';
+import { recordPageView } from '@/lib/metrics';
 
 const card = 'rounded-card border-2 border-theme-border bg-theme-card shadow-neo backdrop-blur';
 
 export default async function Home() {
+  const startedAt = performance.now();
   await requireSession();
   const [{ counts, recentSolutions, recentReports, latestLesson }, people] = await Promise.all([
     getHomeData(),
@@ -44,6 +46,7 @@ export default async function Home() {
     { forms: ['доклад', 'доклада', 'докладов'], value: counts.reports, href: '/kb?type=report' },
   ];
 
+  recordPageView('/', startedAt);
   return (
     <>
       <section className="flex flex-wrap gap-6 rounded-card-lg border-2 border-theme-border bg-theme-card p-5 shadow-neo-lg backdrop-blur md:p-8">
