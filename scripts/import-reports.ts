@@ -5,7 +5,7 @@
 // Every *.md in <folder> becomes one report. Optional front matter:
 //   ---
 //   title: NumPy: массивы без циклов
-//   library: NumPy
+//   library: NumPy        (optional)
 //   authors: Анна Иванова, Борис Петров
 //   group: group-1        (overrides --group)
 //   lesson: 1             (lesson number)

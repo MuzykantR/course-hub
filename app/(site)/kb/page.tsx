@@ -11,6 +11,8 @@ import { KB_PAGE_SIZE, listKb } from '@/lib/db/queries/kb';
 import { getPeople } from '@/lib/db/queries/people';
 import { plural } from '@/lib/format';
 import { kbHref, parseKbFilters } from '@/lib/validation/kb';
+import { recordPageView } from '@/lib/metrics';
+import { metricKind } from '@/lib/reliability-core';
 
 export const metadata: Metadata = { title: 'База знаний' };
 
@@ -19,6 +21,7 @@ export default async function KbPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
+  const startedAt = performance.now();
   const session = await requireSession();
   const filters = parseKbFilters(await searchParams);
   const [{ items, total }, people] = await Promise.all([listKb(filters), getPeople()]);
@@ -27,6 +30,7 @@ export default async function KbPage({
     filters.q || filters.type || filters.group || filters.student || filters.tag,
   );
 
+  recordPageView('/kb', startedAt, metricKind('/kb', filters.q));
   return (
     <>
       <PageHeader eyebrow="Задачи и доклады" title="База знаний">

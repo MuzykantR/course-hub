@@ -116,6 +116,48 @@ export type Database = {
         };
         Relationships: [];
       };
+      page_metrics: {
+        Row: {
+          created_at: string;
+          duration_ms: number;
+          id: number;
+          kind: string;
+          ok: boolean;
+          route: string;
+        };
+        Insert: {
+          created_at?: string;
+          duration_ms: number;
+          id?: never;
+          kind: string;
+          ok: boolean;
+          route: string;
+        };
+        Update: {
+          created_at?: string;
+          duration_ms?: number;
+          id?: never;
+          kind?: string;
+          ok?: boolean;
+          route?: string;
+        };
+        Relationships: [];
+      };
+      health_checks: {
+        Row: {
+          created_at: string;
+          id: number;
+        };
+        Insert: {
+          created_at?: string;
+          id?: never;
+        };
+        Update: {
+          created_at?: string;
+          id?: never;
+        };
+        Relationships: [];
+      };
       rate_events: {
         Row: {
           created_at: string;
@@ -504,6 +546,7 @@ export type Database = {
         Args: { p_student_id: number };
         Returns: undefined;
       };
+      record_health_check: { Args: never; Returns: boolean };
       tags_to_text: { Args: { tags: string[] }; Returns: string };
     };
     Enums: {

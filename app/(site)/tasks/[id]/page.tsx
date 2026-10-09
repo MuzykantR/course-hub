@@ -14,6 +14,7 @@ import { getPeople } from '@/lib/db/queries/people';
 import { formatDate, formatShortDate } from '@/lib/format';
 import { parseTaskTests } from '@/lib/python/protocol';
 import { parseIdParam } from '@/lib/validation/params';
+import { recordPageView } from '@/lib/metrics';
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -24,6 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function TaskPage({ params }: Props) {
+  const startedAt = performance.now();
   const session = await requireSession();
   const id = parseIdParam((await params).id);
   const [task, people] = await Promise.all([getTask(id), getPeople()]);
@@ -33,6 +35,7 @@ export default async function TaskPage({ params }: Props) {
     ? people.studentById.get(task.assigned_student_id)
     : undefined;
 
+  recordPageView('/tasks/[id]', startedAt);
   return (
     <>
       <PageHeader
